@@ -1,5 +1,6 @@
 package com.toyboardproject.domain;
 
+import com.toyboardproject.domain.account.Account;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;

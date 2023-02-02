@@ -1,5 +1,8 @@
-package com.toyboardproject.domain;
+package com.toyboardproject.domain.account;
 
+import com.toyboardproject.domain.AuditingFields;
+import com.toyboardproject.domain.Board;
+import com.toyboardproject.domain.BoardComment;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
