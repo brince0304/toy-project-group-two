@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -35,7 +36,19 @@ public class BoardCommentService {
                 BoardCommentResponseDto.entitiesToDTO(comment)).collect(Collectors.toList());
     }
 
+    // 댓글 수정 로직
+    public Boolean updateBoardComment(BoardCommentRequestDto boardCommentRequestDto){
+        Optional<BoardComment> result = boardCommentRepository.findById(boardCommentRequestDto.getId());
 
+        if(result.isPresent()){
+            BoardComment comment = result.get();
+            comment.changeCommentContent(boardCommentRequestDto.getCommentContent());
 
+            boardCommentRepository.save(comment);
 
+            return true;
+        }
+
+        return false;
+    }
 }

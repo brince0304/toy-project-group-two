@@ -3,10 +3,8 @@ package com.toyboardproject.Service;
 import com.toyboardproject.Repository.BoardCommentRepository;
 import com.toyboardproject.domain.Board;
 import com.toyboardproject.domain.BoardComment;
-import com.toyboardproject.domain.BoardType;
 import com.toyboardproject.dto.BoardCommentRequestDto;
-import com.toyboardproject.dto.BoardCommentResponseDto;
-import jakarta.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -71,6 +68,16 @@ class BoardCommentServiceTest {
 //        for(BoardCommentResponseDto response : result){
 //            System.out.println(response.toString());
 //        }
+    }
 
+    @DisplayName("[Service] 댓글 수정 테스트")
+    @Test
+    public void updateBoardCommentByCommentId() {
+        given(boardCommentRepository.findById(any(Long.class))).willReturn(Optional.of(mockRequestSuccess.dtoToEntity()));
+
+        mockRequestSuccess.setCommentContent("Update Test....");
+        boolean check = boardCommentService.updateBoardComment(mockRequestSuccess);
+
+        assertThat(check).isEqualTo(true);
     }
 }

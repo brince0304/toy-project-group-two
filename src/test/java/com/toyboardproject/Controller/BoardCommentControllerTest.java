@@ -4,20 +4,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toyboardproject.Repository.AccountRepository;
 import com.toyboardproject.Repository.BoardRepository;
 import com.toyboardproject.Service.BoardCommentService;
+import com.toyboardproject.config.SecurityConfig;
 import com.toyboardproject.domain.Account;
 import com.toyboardproject.domain.Board;
 import com.toyboardproject.domain.BoardType;
 import com.toyboardproject.dto.BoardCommentRequestDto;
 
 
+import com.toyboardproject.dto.BoardCommentResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -26,13 +31,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@Import(SecurityConfig.class)
 @AutoConfigureMockMvc
 @SpringBootTest
 class BoardCommentControllerTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
-    @MockBean private BoardCommentService commentService;
+
+    @Autowired private BoardCommentService commentService;
 
     @Autowired private BoardRepository boardRepository;
 
@@ -70,7 +76,7 @@ class BoardCommentControllerTest {
     @Test
     public void createBoardCommentTest() throws Exception {
         BoardCommentRequestDto request = BoardCommentRequestDto.builder()
-                .commentContent("test......")
+                .commentContent("test2......")
                 .boardId(1L)
                 .build();
 
@@ -80,7 +86,11 @@ class BoardCommentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andDo(print());
+//
+//        boolean check = commentService.createBoardComment(request);
+//        System.out.println(check);
     }
+
 
     @DisplayName("[Controller] 댓글 목록 성공 테스트")
     @Test
@@ -101,6 +111,29 @@ class BoardCommentControllerTest {
 //        for(BoardCommentResponseDto response : result){
 //            System.out.println(response.toString());
 //        }
+    }
+
+    @DisplayName("[Controller] 댓글 수정 성공 테스트")
+    @Test
+    public void updateComment() throws Exception {
+        BoardCommentRequestDto request = BoardCommentRequestDto.builder()
+                .commentContent("Update test2......")
+                .boardId(1L)
+                .id(8L)
+                .build();
+
+        given(commentService.updateBoardComment(any(BoardCommentRequestDto.class)))
+                .willReturn(any(Boolean.class));
+
+        mockMvc.perform(put("/comment/")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andDo(print());
+
+//        boolean check = commentService.updateBoardCommentByCommentId(request);
+//        System.out.println(check);
     }
 
 }
