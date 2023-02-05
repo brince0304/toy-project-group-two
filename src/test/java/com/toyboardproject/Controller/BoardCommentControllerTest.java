@@ -19,6 +19,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -78,6 +80,27 @@ class BoardCommentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andDo(print());
+    }
+
+    @DisplayName("[Controller] 댓글 목록 성공 테스트")
+    @Test
+    public void getListTest() throws Exception{
+        given(commentService.getBoardCommentsByBoardId(any(Long.class)))
+                .willReturn(any());
+
+        mockMvc.perform(get("/comment/")
+                        .content("{ \"boardId\" : 1}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andDo(print());
+
+
+//        List<BoardCommentResponseDto> result = commentService.getBoardCommentsByBoardId(1L);
+//
+//        for(BoardCommentResponseDto response : result){
+//            System.out.println(response.toString());
+//        }
     }
 
 }
