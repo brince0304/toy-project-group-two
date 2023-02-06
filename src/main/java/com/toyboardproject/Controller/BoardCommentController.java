@@ -65,4 +65,18 @@ public class BoardCommentController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    /**
+     * 댓글 삭제 기능
+     */
+    @AuthCheck
+    @DeleteMapping("/comment/")
+    private ResponseEntity<Boolean> deleteComment(@AuthenticationPrincipal PrincipalDto principalDto,
+                                                  Long commentId){
+        log.info("댓글 삭제 기능 수행");
+
+        boolean result = boardCommentService.deleteBoardCommentByCommentId(commentId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

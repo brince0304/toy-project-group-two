@@ -5,6 +5,7 @@ import com.toyboardproject.domain.BoardComment;
 import com.toyboardproject.dto.BoardCommentRequestDto;
 import com.toyboardproject.Repository.BoardCommentRepository;
 import com.toyboardproject.dto.BoardCommentResponseDto;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -50,5 +51,16 @@ public class BoardCommentService {
         }
 
         return false;
+    }
+
+    // 댓글 삭제 로직
+    public Boolean deleteBoardCommentByCommentId(Long id){
+        Optional<BoardComment> comment = boardCommentRepository.findById(id);
+        if(comment.isEmpty()){
+            throw new EntityNotFoundException("오류가 발생하였습니다.");
+        }
+
+        boardCommentRepository.deleteById(id);
+        return true;
     }
 }

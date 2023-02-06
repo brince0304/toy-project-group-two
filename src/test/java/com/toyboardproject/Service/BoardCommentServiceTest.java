@@ -5,6 +5,7 @@ import com.toyboardproject.domain.Board;
 import com.toyboardproject.domain.BoardComment;
 import com.toyboardproject.dto.BoardCommentRequestDto;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -79,5 +80,27 @@ class BoardCommentServiceTest {
         boolean check = boardCommentService.updateBoardComment(mockRequestSuccess);
 
         assertThat(check).isEqualTo(true);
+    }
+
+    @DisplayName("[Service] 댓글 삭제 성공 테스트")
+    @Test
+    public void deleteBoardCommentByCommentId() {
+        boardCommentRepository.save(mockRequestSuccess.dtoToEntity());
+
+        boolean check = boardCommentService.deleteBoardCommentByCommentId(mockRequestSuccess.getId());
+
+        assertThat(check).isEqualTo(true);
+        assertThat(boardCommentRepository.count()).isEqualTo(0);
+    }
+
+    @DisplayName("[Service] 댓글 삭제 실패 테스트")
+    @Test
+    public void deleteBoardCommentByCommentIdFail() {
+        given(boardCommentRepository.save(any())).willReturn(any());
+
+        boardCommentService.createBoardComment(mockRequestSuccess);
+
+        assertThatThrownBy(() -> boardCommentService.deleteBoardCommentByCommentId(3L))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 }

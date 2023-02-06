@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Where(clause = "is_deleted = false")
-@SQLDelete(sql = "UPDATE account SET is_deleted = true, deleted_at=now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE board_comment SET is_deleted = true, deleted_at=now() WHERE id = ?")
 public class BoardComment  extends AuditingFields {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)

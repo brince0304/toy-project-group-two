@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -30,6 +31,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
 
 @Import(SecurityConfig.class)
 @AutoConfigureMockMvc
@@ -113,11 +116,12 @@ class BoardCommentControllerTest {
 //        }
     }
 
+    @WithUserDetails(value = "test1", userDetailsServiceBeanName = "customUserDetailsService")
     @DisplayName("[Controller] 댓글 수정 성공 테스트")
     @Test
     public void updateComment() throws Exception {
         BoardCommentRequestDto request = BoardCommentRequestDto.builder()
-                .commentContent("Update test2......")
+                .commentContent("Update test2.......")
                 .boardId(1L)
                 .id(8L)
                 .build();
@@ -132,8 +136,26 @@ class BoardCommentControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andDo(print());
 
-//        boolean check = commentService.updateBoardCommentByCommentId(request);
+//        boolean check = commentService.updateBoardComment(request);
 //        System.out.println(check);
     }
 
+
+    @WithUserDetails(value = "test1", userDetailsServiceBeanName = "customUserDetailsService")
+    @DisplayName("[Controller] 댓글 삭제 성공 테스트")
+    @Test
+    public void deleteComment() throws Exception{
+//        given(commentService.deleteBoardCommentByCommentId(any(Long.class)))
+//                .willReturn(any(Boolean.class));
+//
+//        mockMvc.perform(delete("/comment/")
+//                        .content("{ \"commentId\" : 5}")
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+//                .andDo(print());
+
+        boolean check = commentService.deleteBoardCommentByCommentId(5L);
+        System.out.println(check);
+    }
 }
