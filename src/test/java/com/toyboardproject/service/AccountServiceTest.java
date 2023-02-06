@@ -23,7 +23,7 @@ class AccountServiceTest {
     AccountRepository accountRepository;
 
     @Test
-    void createAccount() {
+    void createAccountTest() {
         AccountRequestDto dto = AccountRequestDto.builder()
                 .userId("test")
                 .userPassword("test")
@@ -34,20 +34,27 @@ class AccountServiceTest {
     }
 
     @Test
-    void deleteAccountById() {
+    void deleteAccountByIdTest() {
         given(accountRepository.existsById(any())).willReturn(true);
         accountService.deleteAccountById(anyLong());
         then(accountRepository).should().deleteById(any());
     }
 
     @Test
-    void updateAccountById() {
+    void updateAccountByIdTest() {
     }
 
     @Test
-    void checkExistUserId() {
+    void checkExistUserIdTest() {
         given(accountRepository.existsByUserId(any())).willReturn(true);
         accountService.checkExistUserId(anyString());
         then(accountRepository).should().existsByUserId(any());
+    }
+
+    @Test
+    void checkExistUserNickName() {
+        given(accountRepository.existsByUserNickName(any())).willReturn(true);
+        accountService.checkExistUserNickName(anyString());
+        then(accountRepository).should().existsByUserNickName(any());
     }
 }

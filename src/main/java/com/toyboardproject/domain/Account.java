@@ -28,7 +28,6 @@ public class Account extends AuditingFields {
     @Setter
     private String userPassword;
 
-
     @Setter
     private String userNickname;
 

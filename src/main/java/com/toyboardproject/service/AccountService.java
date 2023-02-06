@@ -3,6 +3,7 @@ package com.toyboardproject.service;
 import com.toyboardproject.domain.Account;
 import com.toyboardproject.dto.AccountRequestDto;
 import com.toyboardproject.repository.AccountRepository;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,13 @@ public class AccountService {
 
     public boolean checkExistUserId(String userId) {
         if(accountRepository.existsByUserId(userId)) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkExistUserNickName(String userNickName) {
+        if (accountRepository.existsByUserNickName(userNickName)) {
             return false;
         }
         return true;
