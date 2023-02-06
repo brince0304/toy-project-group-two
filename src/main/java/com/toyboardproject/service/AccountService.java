@@ -43,4 +43,10 @@ public class AccountService {
         accountRepository.save(account1);
     }
 
+    public boolean checkExistUserId(String userId) {
+        if(accountRepository.existsByUserId(userId)) {
+            return false;
+        }
+        return true;
+    }
 }

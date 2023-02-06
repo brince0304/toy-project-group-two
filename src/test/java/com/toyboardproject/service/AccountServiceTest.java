@@ -8,8 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -43,5 +42,12 @@ class AccountServiceTest {
 
     @Test
     void updateAccountById() {
+    }
+
+    @Test
+    void checkExistUserId() {
+        given(accountRepository.existsByUserId(any())).willReturn(true);
+        accountService.checkExistUserId(anyString());
+        then(accountRepository).should().existsByUserId(any());
     }
 }
