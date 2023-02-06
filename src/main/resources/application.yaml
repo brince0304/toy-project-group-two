@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/account?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
-    username: root
-    password:
+    username: sa
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     defer-datasource-initialization: true
