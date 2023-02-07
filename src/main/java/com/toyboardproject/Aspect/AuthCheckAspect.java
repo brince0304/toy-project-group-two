@@ -16,10 +16,10 @@ public class AuthCheckAspect {
     public void authCheck() {
     }
 
-    @Before("authCheck()")
-    public void beforeAuthCheck(JoinPoint joinPoint) throws IllegalAccessException {
-        Object[] args = joinPoint.getArgs();
-
-        Arrays.stream(args).filter(o-> o instanceof PrincipalDto).findFirst().orElseThrow(()-> new IllegalAccessException("로그인이 필요합니다."));
+    @Before("authCheck()&&args(principal,..)")
+    public void beforeAuthCheck(PrincipalDto principal) throws IllegalAccessException {
+        if (principal == null) {
+            throw new IllegalAccessException("로그인이 필요합니다.");
+        }
     }
 }

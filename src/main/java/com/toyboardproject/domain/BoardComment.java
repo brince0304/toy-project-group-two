@@ -34,8 +34,5 @@ public class BoardComment  extends AuditingFields {
     @ManyToOne (fetch = FetchType.LAZY)
     private Board board;
 
-    public void changeCommentContent(String commentContent){
-        this.commentContent = commentContent;
-    }
 
 }

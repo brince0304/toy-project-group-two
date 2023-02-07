@@ -1,6 +1,7 @@
-package com.toyboardproject.Service;
+package com.toyboardproject.service;
 
-import com.toyboardproject.Repository.BoardCommentRepository;
+import com.toyboardproject.dto.PrincipalDto;
+import com.toyboardproject.repository.BoardCommentRepository;
 import com.toyboardproject.domain.Board;
 import com.toyboardproject.domain.BoardComment;
 import com.toyboardproject.dto.BoardCommentRequestDto;
@@ -37,11 +38,13 @@ class BoardCommentServiceTest {
     @DisplayName("[Service] 댓글 저장 테스트")
     @Test
     public void createBoardCommentTest() {
+
         // given
         given(boardCommentRepository.save(any(BoardComment.class)))
                 .willReturn(any(BoardComment.class));
 
-        boolean check = boardCommentService.createBoardComment(mockRequestSuccess);
+
+        boolean check = boardCommentService.createBoardComment(mockRequestSuccess,createPrincipalDto());
 
         then(boardCommentRepository).should().save(any(BoardComment.class));
 
@@ -74,22 +77,22 @@ class BoardCommentServiceTest {
     @DisplayName("[Service] 댓글 수정 테스트")
     @Test
     public void updateBoardCommentByCommentId() {
-        given(boardCommentRepository.findById(any(Long.class))).willReturn(Optional.of(mockRequestSuccess.dtoToEntity()));
+        given(boardCommentRepository.findById(any(Long.class))).willReturn(Optional.of(mockRequestSuccess.toEntity(createPrincipalDto())));
 
         mockRequestSuccess.setCommentContent("Update Test....");
-        boolean check = boardCommentService.updateBoardComment(mockRequestSuccess);
+        boardCommentService.updateBoardComment(mockRequestSuccess);
+        then(boardCommentRepository).should().findById(any(Long.class));
 
-        assertThat(check).isEqualTo(true);
+
     }
 
     @DisplayName("[Service] 댓글 삭제 성공 테스트")
     @Test
     public void deleteBoardCommentByCommentId() {
-        boardCommentRepository.save(mockRequestSuccess.dtoToEntity());
+        boardCommentRepository.save(mockRequestSuccess.toEntity(createPrincipalDto()));
 
-        boolean check = boardCommentService.deleteBoardCommentByCommentId(mockRequestSuccess.getId());
+        boardCommentService.deleteBoardCommentByCommentId(mockRequestSuccess.getId());
 
-        assertThat(check).isEqualTo(true);
         assertThat(boardCommentRepository.count()).isEqualTo(0);
     }
 
@@ -98,9 +101,19 @@ class BoardCommentServiceTest {
     public void deleteBoardCommentByCommentIdFail() {
         given(boardCommentRepository.save(any())).willReturn(any());
 
-        boardCommentService.createBoardComment(mockRequestSuccess);
+        boardCommentService.createBoardComment(mockRequestSuccess,createPrincipalDto());
 
         assertThatThrownBy(() -> boardCommentService.deleteBoardCommentByCommentId(3L))
                 .isInstanceOf(EntityNotFoundException.class);
     }
+
+    private PrincipalDto createPrincipalDto(){
+        return PrincipalDto.builder()
+                .id(1L)
+                .userId("test")
+                .userPassword("test")
+                .userName("name")
+                .build();
+    }
+
 }

@@ -1,20 +1,16 @@
 package com.toyboardproject.service;
 
-import com.toyboardproject.Repository.BoardRepository;
+import com.toyboardproject.dto.PrincipalDto;
+import com.toyboardproject.repository.BoardRepository;
 import com.toyboardproject.domain.Board;
-import com.toyboardproject.domain.BoardType;
-import com.toyboardproject.dto.BoardDto;
+import com.toyboardproject.dto.BoardRequestDto;
 import com.toyboardproject.dto.BoardResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -25,8 +21,8 @@ public class BoardService {
 
     // 게시글 생성
     // account dto객체 매개변수 추가 필요
-    public Long createBoard(BoardDto dto){
-        return boardRepository.save(dto.toEntity()).getId();
+    public Long createBoard(BoardRequestDto dto, PrincipalDto principal){
+        return boardRepository.save(dto.toEntity(principal)).getId();
     }
 
     // 게시글 단건 조회
@@ -47,15 +43,14 @@ public class BoardService {
 
     // 게시글 리스트 조회
     public Page<BoardResponseDto> findAll(Pageable pageable){
-        Page<Board> page = boardRepository.findAll(pageable);
-        return page.stream().map(BoardResponseDto::from);
+        return boardRepository.findAll(pageable).map(BoardResponseDto::from);
     }
 
 
 
     //게시글 수정 (변경점만 수정)
     // accountId 매개변수 추가 필요
-    public Long updateBoardById(Long id, BoardDto dto){
+    public Long updateBoardById(Long id, BoardRequestDto dto){
         Board entity = boardRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("게시글 없음"));
         //if(!entity.getBoardTitle().equals(dto.getBoardTitle()){
@@ -66,10 +61,10 @@ public class BoardService {
 
     //게시글 삭제
     //accountId 매개변수 추가 필요
-    public Boolean deleteBoardById(Long id){
+    public void deleteBoardById(Long id){
         Board entity = boardRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("게시글 없음"));
-        return boardRepository.deleteById(id);
+        boardRepository.deleteById(id);
     }
 
  

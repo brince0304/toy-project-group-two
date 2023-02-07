@@ -1,15 +1,12 @@
 package com.toyboardproject.dto;
 
 import com.toyboardproject.domain.Board;
-import com.toyboardproject.domain.BoardComment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -31,18 +28,18 @@ public class BoardResponseDto {
     
     private String userId;
     
-    private Long commentCount;
+    private Integer commentCount;
     
     public static BoardResponseDto from(Board entity){
-        return BoardResponseDto.Builder()
+        return BoardResponseDto.builder()
         .id(entity.getId())
-        .title(entity.getTitle())
-        .content(entity.getContent())
+        .title(entity.getBoardTitle())
+        .content(entity.getBoardContent())
         .createdAt(entity.getCreatedAt())
         .modifiedAt(entity.getModifiedAt())
         .userNickname(entity.getAccount().getUserNickname())
         .userId(entity.getAccount().getUserId())
-        .commentCount(entity.getBoardComments().count())
+        .commentCount(entity.getBoardComments().size())
         .build();
     }
 }

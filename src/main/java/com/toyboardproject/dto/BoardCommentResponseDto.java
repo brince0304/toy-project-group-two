@@ -15,17 +15,17 @@ import java.time.LocalDateTime;
 public class BoardCommentResponseDto {
     private Long id;
     private Long boardId;
-    private Long accountId;
+    private Long userId;
     private String commentContent;
     private String userNickname;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public static BoardCommentResponseDto entitiesToDTO(BoardComment boardComment){
+    public static BoardCommentResponseDto from(BoardComment boardComment){
         return BoardCommentResponseDto.builder()
                 .id(boardComment.getId())
                 .boardId(boardComment.getBoard().getId())
-                .accountId(boardComment.getAccount().getId())
+                .userId(boardComment.getAccount().getId())
                 .commentContent(boardComment.getCommentContent())
                 .userNickname(boardComment.getAccount().getUserNickname())
                 .createdAt(boardComment.getCreatedAt())

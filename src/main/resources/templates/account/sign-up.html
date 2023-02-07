@@ -21,7 +21,7 @@
 <header id="header" th:replace="~{/header.html :: header}">
     헤더
 </header>
-<div class="limiter">
+<div class="limiter" style="margin-top:30%">
     <div class="container-login100">
         <div class="wrap-login100">
             <form class="login100-form validate-form">
@@ -33,7 +33,7 @@
                             <span class="badge bg-transparent text-secondary" style="margin-top:2%">중복확인</span>
 							<i class="fa fa-check" id="id-validate" style="color:darkgreen"></i>
 						</span>
-                    <input class="input100" type="text" name="email">
+                    <input class="input100" type="text" name="userId" id="userId">
                     <span class="focus-input100" data-placeholder="아이디를"></span>
                 </div>
 
@@ -41,7 +41,7 @@
 						<span class="btn-show-pass">
 							<i class="zmdi zmdi-eye password-validate" ></i>
 						</span>
-                    <input class="input100" type="password" name="pass">
+                    <input class="input100" type="password" name="userPassword" id="userPassword">
                     <span class="focus-input100" data-placeholder="비밀번호"></span>
                 </div>
 
@@ -49,16 +49,16 @@
 						<span class="btn-show-pass">
 							<i class="zmdi zmdi-eye password-validate" ></i>
 						</span>
-                    <input class="input100" type="password" name="pass">
+                    <input class="input100" type="password" name="userPasswordCheck" id="userPasswordCheck">
                     <span class="focus-input100" data-placeholder="비밀번호 확인"></span>
                 </div>
                 <div class="wrap-input100 validate-input" >
-                    <input class="input100" type="text" name="email">
+                    <input class="input100" type="text" name="userName">
                     <span class="focus-input100" data-placeholder="이름"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-                    <input class="input100" type="text" name="email">
+                    <input class="input100" type="text" name="userNickname" id="userNickname">
                     <span class="btn-show-pass" style="cursor:pointer">
                             <span class="badge bg-transparent text-secondary" style="margin-top:2%">중복확인</span>
 							<i class="fa fa-check" id="id-validate" style="color:darkgreen"></i>
@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-                    <input class="input100" type="text" name="email">
+                    <input class="input100" type="text" name="userPhoneNum" id="userPhoneNum">
                     <span class="focus-input100" data-placeholder="휴대폰 번호"></span>
                 </div>
                 <div>
@@ -78,7 +78,7 @@
                 <div class="container-login100-form-btn">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn">
+                        <button class="login100-form-btn" type="button" onclick="signUp()" >
                             가입하기
                         </button>
                     </div>
@@ -101,6 +101,7 @@
     푸터
 </footer>
 
+<script src="https://code.jquery.com/jquery-3.6.1.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
@@ -110,7 +111,37 @@
         integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
 </script>
 
-<script src="js/main.js"></script>
+<script src="/js/main.js"></script>
 
 </body>
+<script>
+    function signUp(){
+        const userId = $('#userId').val();
+        const userPassword = $('#userPassword').val();
+        const userName = $('#userName').val();
+        const userNickname = $('#userNickname').val();
+        const userPhoneNum = $('#userPhoneNum').val();
+
+        $.ajax({
+            url: '/account/sign-up',
+            type: 'POST',
+            data: JSON.stringify({
+                userId: userId,
+                userPassword: userPassword,
+                userName: userName,
+                userNickname: userNickname,
+                userPhoneNum: userPhoneNum
+            }),
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                    alert('회원가입 성공');
+                    location.href = '/user/login';
+            },
+            error: function (error) {
+                alert('회원가입 실패');
+            }
+        })
+    }
+
+</script>
 </html>

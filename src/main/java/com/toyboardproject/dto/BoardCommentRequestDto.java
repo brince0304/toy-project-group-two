@@ -17,10 +17,11 @@ public class BoardCommentRequestDto {
     private String commentContent;
 
     // DTO -> Entity 객체로 변환
-    public BoardComment dtoToEntity(){
+    public BoardComment toEntity(PrincipalDto dto){
         return BoardComment.builder()
                 .board(Board.builder().id(boardId).build())
                 .commentContent(commentContent)
+                .account(dto.toEntity())
                 .build();
     }
 

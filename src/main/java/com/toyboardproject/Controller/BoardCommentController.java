@@ -1,12 +1,13 @@
-package com.toyboardproject.Controller;
+package com.toyboardproject.controller;
 
 
 import com.toyboardproject.Annotation.AuthCheck;
 import com.toyboardproject.Annotation.BindingCheck;
 import com.toyboardproject.dto.BoardCommentRequestDto;
-import com.toyboardproject.Service.BoardCommentService;
+import com.toyboardproject.service.BoardCommentService;
 import com.toyboardproject.dto.BoardCommentResponseDto;
 import com.toyboardproject.dto.PrincipalDto;
+import com.toyboardproject.service.BoardCommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,11 +31,11 @@ public class BoardCommentController {
     @AuthCheck
     @BindingCheck
     @PostMapping("/comment")
-    private ResponseEntity<Boolean> createComment(@AuthenticationPrincipal PrincipalDto principalDto,
+    private ResponseEntity<Boolean> createComment(@AuthenticationPrincipal PrincipalDto principal,
             @Valid @RequestBody BoardCommentRequestDto commentRequest,
                                                   BindingResult bindingResult){
         log.info("댓글 저장 기능 수행");
-        boolean result = boardCommentService.createBoardComment(commentRequest);
+        boolean result = boardCommentService.createBoardComment(commentRequest,principal);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -44,9 +45,7 @@ public class BoardCommentController {
      * */
     @GetMapping("/comment/")
     private ResponseEntity<List<BoardCommentResponseDto>> getList(Long boardId){
-        log.info("댓글 목록 불러오기");
         List<BoardCommentResponseDto> commentList = boardCommentService.getBoardCommentsByBoardId(boardId);
-
         return new ResponseEntity<>(commentList, HttpStatus.OK);
     }
 
@@ -56,13 +55,12 @@ public class BoardCommentController {
     @BindingCheck
     @AuthCheck
     @PutMapping("/comment/")
-    private ResponseEntity<Boolean> updateComment(@AuthenticationPrincipal PrincipalDto principalDto,
+    private ResponseEntity<Boolean> updateComment(@AuthenticationPrincipal PrincipalDto principal,
             @Valid @RequestBody BoardCommentRequestDto boardCommentRequestDto,
                                                   BindingResult bindingResult){
         log.info("댓글 수정 기능 수행");
-        boolean result = boardCommentService.updateBoardComment(boardCommentRequestDto);
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        boardCommentService.updateBoardComment(boardCommentRequestDto);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 
     /**
@@ -70,13 +68,13 @@ public class BoardCommentController {
      */
     @AuthCheck
     @DeleteMapping("/comment/")
-    private ResponseEntity<Boolean> deleteComment(@AuthenticationPrincipal PrincipalDto principalDto,
+    private ResponseEntity<Boolean> deleteComment(@AuthenticationPrincipal PrincipalDto principal,
                                                   Long commentId){
         log.info("댓글 삭제 기능 수행");
 
-        boolean result = boardCommentService.deleteBoardCommentByCommentId(commentId);
+        boardCommentService.deleteBoardCommentByCommentId(commentId);
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 
 }

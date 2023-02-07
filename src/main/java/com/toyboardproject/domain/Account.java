@@ -8,6 +8,7 @@ import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -38,25 +39,49 @@ public class Account extends AuditingFields {
     @Setter
     private String userPhoneNum;
 
-    @Builder.Default
     @Setter
     @Builder.Default
     private Boolean isDeleted = Boolean.FALSE;
 
 
-    @Nullable
     private LocalDateTime deletedAt;
 
-    @Builder.Default
     @OneToMany (mappedBy="account", cascade=CascadeType.ALL)
     @ToString.Exclude
     @Builder.Default
     private Set<Board> boards = new LinkedHashSet<>();
 
 
-    @Builder.Default
     @OneToMany (mappedBy="account", cascade=CascadeType.ALL)
     @ToString.Exclude
     @Builder.Default
     private Set<BoardComment> boardComments = new LinkedHashSet<>();
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userPhoneNum='" + userPhoneNum + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", deletedAt=" + deletedAt +
+                ", boards=" + boards +
+                ", boardComments=" + boardComments +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account account)) return false;
+        return id.equals(account.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

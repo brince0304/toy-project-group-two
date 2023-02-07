@@ -7,7 +7,7 @@ import lombok.*;
 @Data
 @Builder
 @NoArgsConstructor
-public class BoardDto {
+public class BoardRequestDto {
 
     private String title;
 
@@ -16,7 +16,7 @@ public class BoardDto {
     private BoardType boardType;
 
     @Builder
-    public BoardDto(String title, String content, BoardType boardType) {
+    public BoardRequestDto(String title, String content, BoardType boardType) {
         this.title = title;
         this.content = content;
         this.boardType = boardType;
@@ -25,7 +25,7 @@ public class BoardDto {
         return Board.builder()
                 .boardTitle(title)
                 .boardContent(content)
-                .boardType(boardType);
+                .boardType(boardType)
                 .account(dto.toEntity())
                 .build();
     }

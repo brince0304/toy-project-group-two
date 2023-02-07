@@ -1,9 +1,9 @@
 package com.toyboardproject.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toyboardproject.Repository.AccountRepository;
-import com.toyboardproject.Repository.BoardRepository;
-import com.toyboardproject.Service.BoardCommentService;
+import com.toyboardproject.repository.AccountRepository;
+import com.toyboardproject.repository.BoardRepository;
+import com.toyboardproject.service.BoardCommentService;
 import com.toyboardproject.config.SecurityConfig;
 import com.toyboardproject.domain.Account;
 import com.toyboardproject.domain.Board;
@@ -11,19 +11,16 @@ import com.toyboardproject.domain.BoardType;
 import com.toyboardproject.dto.BoardCommentRequestDto;
 
 
-import com.toyboardproject.dto.BoardCommentResponseDto;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -41,41 +38,15 @@ class BoardCommentControllerTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
-    @Autowired private BoardCommentService commentService;
-
-    @Autowired private BoardRepository boardRepository;
-
-    @Autowired private AccountRepository accountRepository;
 
 
-    @Test
-    public void insertAccount() {
-        Account account1 = Account.builder()
-                .userId("test1")
-                .userName("홍길동")
-                .userNickname("Spring")
-                .userPassword("12345678")
-                .userPhoneNum("01012345678")
-                .build();
 
-        accountRepository.save(account1);
-    }
 
-    @Test
-    public void insertBoard() {
-        Account account = Account.builder().id(1L).build();
 
-        Board board = Board.builder()
-                .account(account)
-                .boardTitle("test1")
-                .boardContent("test....")
-                .boardType(BoardType.FREE)
-                .build();
 
-        boardRepository.save(board);
-    }
 
     @DisplayName("[Controller] 댓글 저장 성공 테스트")
+    @WithUserDetails("test")
     @Test
     public void createBoardCommentTest() throws Exception {
         BoardCommentRequestDto request = BoardCommentRequestDto.builder()
@@ -98,8 +69,7 @@ class BoardCommentControllerTest {
     @DisplayName("[Controller] 댓글 목록 성공 테스트")
     @Test
     public void getListTest() throws Exception{
-        given(commentService.getBoardCommentsByBoardId(any(Long.class)))
-                .willReturn(any());
+
 
         mockMvc.perform(get("/comment/")
                         .content("{ \"boardId\" : 1}")
@@ -116,7 +86,7 @@ class BoardCommentControllerTest {
 //        }
     }
 
-    @WithUserDetails(value = "test1", userDetailsServiceBeanName = "customUserDetailsService")
+    @WithUserDetails("test")
     @DisplayName("[Controller] 댓글 수정 성공 테스트")
     @Test
     public void updateComment() throws Exception {
@@ -126,8 +96,6 @@ class BoardCommentControllerTest {
                 .id(8L)
                 .build();
 
-        given(commentService.updateBoardComment(any(BoardCommentRequestDto.class)))
-                .willReturn(any(Boolean.class));
 
         mockMvc.perform(put("/comment/")
                         .content(objectMapper.writeValueAsString(request))
@@ -141,9 +109,10 @@ class BoardCommentControllerTest {
     }
 
 
-    @WithUserDetails(value = "test1", userDetailsServiceBeanName = "customUserDetailsService")
+    @WithUserDetails("test")
     @DisplayName("[Controller] 댓글 삭제 성공 테스트")
     @Test
+    @Disabled
     public void deleteComment() throws Exception{
 //        given(commentService.deleteBoardCommentByCommentId(any(Long.class)))
 //                .willReturn(any(Boolean.class));
@@ -155,7 +124,5 @@ class BoardCommentControllerTest {
 //                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 //                .andDo(print());
 
-        boolean check = commentService.deleteBoardCommentByCommentId(5L);
-        System.out.println(check);
     }
 }

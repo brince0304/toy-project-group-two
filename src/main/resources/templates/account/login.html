@@ -21,7 +21,7 @@
 <header th:replace="~{/header.html :: header}">
   헤더
 </header>
-<div class="limiter">
+<div class="limiter" style="margin-top:30%">
     <div class="container-login100">
         <div class="wrap-login100">
             <form class="login100-form validate-form">
@@ -29,7 +29,7 @@
 						환영합니다
 					</span>
                 <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-                    <input class="input100" type="text" name="email">
+                    <input class="input100" type="text" name="userId" id="userId">
                     <span class="focus-input100" data-placeholder="아이디"></span>
                 </div>
 
@@ -37,14 +37,14 @@
 						<span class="btn-show-pass">
 							<i class="zmdi zmdi-eye"></i>
 						</span>
-                    <input class="input100" type="password" name="pass">
+                    <input class="input100" type="password" name="userPassword" id="userPassword">
                     <span class="focus-input100" data-placeholder="비밀번호"></span>
                 </div>
 
                 <div class="container-login100-form-btn">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn">
+                        <button class="login100-form-btn" type="button" onclick="loginCheck()">
                             로그인
                         </button>
                     </div>
@@ -66,7 +66,7 @@
 <footer id="footer">
     푸터
 </footer>
-
+<script src="https://code.jquery.com/jquery-3.6.1.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
 </script>
@@ -75,7 +75,24 @@
         integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
 </script>
 
-<script src="js/main.js"></script>
+<script src="/js/main.js"></script>
 
 </body>
+<script>
+    function loginCheck(){
+        const userId= $('#userId').val();
+        const userPassword= $('#userPassword').val();
+        $.ajax({
+                url: "/account/login?username="+userId+"&password="+userPassword,
+                type: "POST",
+            success: function () {
+                        alert("로그인 성공");
+                        location.href="/";
+                },
+                error: function () {
+                    alert("로그인 실패");
+                }
+
+            });}
+</script>
 </html>

@@ -1,4 +1,4 @@
-package com.toyboardproject.Repository;
+package com.toyboardproject.repository;
 
 import com.toyboardproject.domain.Board;
 import com.toyboardproject.domain.BoardComment;

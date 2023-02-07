@@ -10,5 +10,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Boolean existsByUserId(String userId);
 
-    Boolean existsByUserNickName(String userNickName);
+    Boolean existsByUserNickname(String userNickName);
 }
