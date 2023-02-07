@@ -7,6 +7,7 @@ import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -43,4 +44,31 @@ public class Board extends AuditingFields  {
     @Enumerated
     @Setter
     private BoardType boardType;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Board board = (Board) o;
+        return Objects.equals(id, board.id) && boardType == board.boardType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, boardType);
+    }
+
+    @Override
+    public String toString() {
+        return "Board{" +
+                "id=" + id +
+                ", boardTitle='" + boardTitle + '\'' +
+                ", boardContent='" + boardContent + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", deletedAt=" + deletedAt +
+                ", account=" + account +
+                ", boardComments=" + boardComments +
+                ", boardType=" + boardType +
+                '}';
+    }
 }
