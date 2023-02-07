@@ -14,6 +14,9 @@ import java.util.Set;
 @Getter
 @Where(clause = "isDeleted = false")
 @SQLDelete(sql = "UPDATE account SET isDeleted = true, deleted_at=now() WHERE id = ?")
+@Builder
+@NoArgsConstructor (access = AccessLevel.PROTECTED)
+@AllArgsConstructor (access = AccessLevel.PRIVATE)
 public class Account extends AuditingFields {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -25,7 +28,6 @@ public class Account extends AuditingFields {
     @Setter
     private String userPassword;
 
-
     @Setter
     private String userNickname;
 
@@ -36,6 +38,7 @@ public class Account extends AuditingFields {
     private String userPhoneNum;
 
     @Setter
+    @Builder.Default
     private Boolean isDeleted = Boolean.FALSE;
 
 
@@ -44,10 +47,12 @@ public class Account extends AuditingFields {
 
     @OneToMany (mappedBy="account", cascade=CascadeType.ALL)
     @ToString.Exclude
+    @Builder.Default
     private Set<Board> boards = new LinkedHashSet<>();
 
 
     @OneToMany (mappedBy="account", cascade=CascadeType.ALL)
     @ToString.Exclude
+    @Builder.Default
     private Set<BoardComment> boardComments = new LinkedHashSet<>();
 }
