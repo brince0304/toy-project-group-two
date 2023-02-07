@@ -18,18 +18,31 @@ import java.util.Set;
 public class BoardResponseDto {
 
     private Long id;
+    
     private String title;
+    
     private String content;
-
-    private Set<BoardComment> boardComments;
-
+    
+    private LocalDateTime createdAt;
+    
     private LocalDateTime modifiedAt;
 
     private String userNickname;
-
-
-    public BoardResponseDto(Board entity){
-        this.title = entity.getBoardTitle();
-        this.content = entity.getBoardContent();
+    
+    private String userId;
+    
+    private Long commentCount;
+    
+    public static BoardResponseDto from(Board entity){
+        return BoardResponseDto.Builder()
+        .id(entity.getId())
+        .title(entity.getTitle())
+        .content(entity.getContent())
+        .createdAt(entity.getCreatedAt())
+        .modifiedAt(entity.getModifiedAt())
+        .userNickname(entity.getAccount().getUserNickname())
+        .userId(entity.getAccount().getUserId())
+        .commentCount(entity.getBoardComments().count())
+        .build();
     }
 }
