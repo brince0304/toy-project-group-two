@@ -8,13 +8,15 @@ import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
+
+@Builder
 @Entity
 @Getter
-@Where(clause = "isDeleted = false")
-@SQLDelete(sql = "UPDATE account SET isDeleted = true, deleted_at=now() WHERE id = ?")
-@Builder
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE account SET is_deleted = true, deleted_at=now() WHERE id = ?")
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
 @AllArgsConstructor (access = AccessLevel.PRIVATE)
 public class Account extends AuditingFields {
@@ -42,7 +44,6 @@ public class Account extends AuditingFields {
     private Boolean isDeleted = Boolean.FALSE;
 
 
-    @Nullable
     private LocalDateTime deletedAt;
 
     @OneToMany (mappedBy="account", cascade=CascadeType.ALL)
@@ -55,4 +56,32 @@ public class Account extends AuditingFields {
     @ToString.Exclude
     @Builder.Default
     private Set<BoardComment> boardComments = new LinkedHashSet<>();
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userPhoneNum='" + userPhoneNum + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", deletedAt=" + deletedAt +
+                ", boards=" + boards +
+                ", boardComments=" + boardComments +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account account)) return false;
+        return id.equals(account.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

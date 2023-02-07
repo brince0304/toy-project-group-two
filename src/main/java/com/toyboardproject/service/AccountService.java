@@ -3,17 +3,25 @@ package com.toyboardproject.service;
 import com.toyboardproject.domain.Account;
 import com.toyboardproject.dto.AccountRequestDto;
 import com.toyboardproject.repository.AccountRepository;
-import jakarta.persistence.EntityExistsException;
+import com.toyboardproject.utils.BcryptUtil;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountService {
     private final AccountRepository accountRepository;
+
+    private final BcryptUtil bcryptUtil;
+
+
 
     private void validateDuplicateAccount(String userId) {
         accountRepository.findByUserId(userId).ifPresent(u -> {
@@ -22,7 +30,8 @@ public class AccountService {
     }
 
     public void createAccount(AccountRequestDto dto) {
-        accountRepository.save(dto.toEntity());
+        Account account_= accountRepository.save(dto.toEntity());
+        account_.setUserPassword(bcryptUtil.encode(account_.getUserPassword()));
     }
 
     public void deleteAccountById(Long id) {
@@ -33,28 +42,19 @@ public class AccountService {
     }
 
     public void updateAccountById(Long id, final AccountRequestDto dto) {
-        Optional<Account> account = accountRepository.findById(id);
-
-        Account account1 = account.get();
-        account1.setUserId(dto.getUserId());
-        account1.setUserPassword(dto.getUserPassword());
-        account1.setUserNickname(dto.getUserNickname());
-        account1.setUserName(dto.getUserName());
-        account1.setUserPhoneNum(dto.getUserPhoneNum());
-        accountRepository.save(account1);
+        Account account = accountRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("없는 아이디입니다."));
+        //각각 설정 할 수 있게
+        account.setUserPassword(dto.getUserPassword());
+        account.setUserNickname(dto.getUserNickname());
+        account.setUserName(dto.getUserName());
+        account.setUserPhoneNum(dto.getUserPhoneNum());
     }
 
     public boolean checkExistUserId(String userId) {
-        if(accountRepository.existsByUserId(userId)) {
-            return false;
-        }
-        return true;
+        return !accountRepository.existsByUserId(userId);
     }
 
     public boolean checkExistUserNickName(String userNickName) {
-        if (accountRepository.existsByUserNickName(userNickName)) {
-            return false;
-        }
-        return true;
+        return !accountRepository.existsByUserNickname(userNickName);
     }
 }

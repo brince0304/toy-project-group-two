@@ -30,12 +30,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.formLogin(form -> form
                         .loginPage("/account/login")
-                        .usernameParameter("userId").passwordParameter("userPassword")
                         .successHandler(new LoginSuccessHandlerCustom())
-                        .successForwardUrl("/board/")
                         .permitAll()
                         .failureHandler((request, response, exception) -> {
-                            log.info("login fail");
+                            log.warn("login fail");
                             response.sendError(401, "로그인에 실패하였습니다.");
                         })
                         .failureUrl("/account/login")

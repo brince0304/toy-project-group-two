@@ -7,10 +7,13 @@ import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Getter
-@Where(clause = "isDeleted = false")
-@SQLDelete(sql = "UPDATE account SET isDeleted = true, deleted_at=now() WHERE id = ?")
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE board_comment SET is_deleted = true, deleted_at=now() WHERE id = ?")
 public class BoardComment  extends AuditingFields {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -19,6 +22,7 @@ public class BoardComment  extends AuditingFields {
     @Setter
     private String commentContent;
 
+    @Builder.Default
     @Setter
     private Boolean isDeleted = Boolean.FALSE;
 

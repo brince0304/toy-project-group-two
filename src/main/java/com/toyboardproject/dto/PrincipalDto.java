@@ -1,5 +1,6 @@
 package com.toyboardproject.dto;
 
+import com.toyboardproject.domain.Account;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,6 +11,7 @@ import java.util.Collection;
 @Builder
 @Data
 public class PrincipalDto implements UserDetails {
+    private Long id;
     private String userId;
     private String userPassword;
     private String userName;
@@ -26,12 +28,12 @@ public class PrincipalDto implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userPassword;
+        return this.userPassword;
     }
 
     @Override
     public String getUsername() {
-        return userId;
+        return this.userId;
     }
 
     @Override
@@ -52,5 +54,16 @@ public class PrincipalDto implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Account toEntity(){
+        return Account.builder()
+                .id(id)
+                .userId(userId)
+                .userPassword(userPassword)
+                .userName(userName)
+                .userPhoneNum(userPhone)
+                .userNickname(userNickname)
+                .build();
     }
 }
