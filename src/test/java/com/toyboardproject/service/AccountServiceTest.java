@@ -52,7 +52,7 @@ class AccountServiceTest {
     }
 
     @Test
-    void checkExistUserNickName() {
+    void checkExistUserNickNameTest() {
         given(accountRepository.existsByUserNickName(any())).willReturn(true);
         accountService.checkExistUserNickName(anyString());
         then(accountRepository).should().existsByUserNickName(any());
