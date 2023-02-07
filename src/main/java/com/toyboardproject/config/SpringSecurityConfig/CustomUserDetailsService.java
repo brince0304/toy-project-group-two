@@ -1,6 +1,6 @@
 package com.toyboardproject.config.SpringSecurityConfig;
 
-import com.toyboardproject.Repository.AccountRepository;
+import com.toyboardproject.repository.AccountRepository;
 import com.toyboardproject.domain.Account;
 import com.toyboardproject.dto.PrincipalDto;
 import lombok.RequiredArgsConstructor;
