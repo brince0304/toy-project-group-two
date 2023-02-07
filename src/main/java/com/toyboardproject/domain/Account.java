@@ -10,11 +10,12 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+
+@Builder
 @Entity
 @Getter
-@Where(clause = "isDeleted = false")
-@SQLDelete(sql = "UPDATE account SET isDeleted = true, deleted_at=now() WHERE id = ?")
-@Builder
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE account SET is_deleted = true, deleted_at=now() WHERE id = ?")
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
 @AllArgsConstructor (access = AccessLevel.PRIVATE)
 public class Account extends AuditingFields {
@@ -37,6 +38,7 @@ public class Account extends AuditingFields {
     @Setter
     private String userPhoneNum;
 
+    @Builder.Default
     @Setter
     @Builder.Default
     private Boolean isDeleted = Boolean.FALSE;
@@ -45,12 +47,14 @@ public class Account extends AuditingFields {
     @Nullable
     private LocalDateTime deletedAt;
 
+    @Builder.Default
     @OneToMany (mappedBy="account", cascade=CascadeType.ALL)
     @ToString.Exclude
     @Builder.Default
     private Set<Board> boards = new LinkedHashSet<>();
 
 
+    @Builder.Default
     @OneToMany (mappedBy="account", cascade=CascadeType.ALL)
     @ToString.Exclude
     @Builder.Default
