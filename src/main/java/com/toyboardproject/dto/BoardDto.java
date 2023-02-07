@@ -21,10 +21,12 @@ public class BoardDto {
         this.content = content;
         this.boardType = boardType;
     }
-    public Board toEntity(){
+    public Board toEntity(PrincipalDto dto){
         return Board.builder()
                 .boardTitle(title)
                 .boardContent(content)
+                .boardType(boardType);
+                .account(dto.toEntity())
                 .build();
     }
 }
