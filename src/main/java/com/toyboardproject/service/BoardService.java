@@ -25,7 +25,7 @@ public class BoardService {
 
     // 게시글 생성
     // account dto객체 매개변수 추가 필요
-    public Long createBoard(BoardDto dto, BoardType boardType){
+    public Long createBoard(BoardDto dto){
         return boardRepository.save(dto.toEntity()).getId();
     }
 
@@ -33,49 +33,46 @@ public class BoardService {
     public BoardResponseDto findBoardById(Long id){
         Board entity = boardRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("해당 게시글이 없습니다"));
-        return new BoardResponseDto(entity);
+        return BoardResponseDto.from(entity);
     }
+    
+    // 게시글 검색
+    //public Page<BoardResponseDto> findByBoardTypeAndSearchTypeAndKeyword(Pageable pageable, BoardType boardType, SearchType searchType, String keyword){
+            //return switch (searchType) {
+            //case TITLE -> articleRepository.findByTitleContaining(searchKeyword, pageable).map(Article.ArticleDto::from).map(Article.ArticleResponse::from);
+            //case CONTENT -> articleRepository.findByContentContaining(searchKeyword, pageable).map(Article.ArticleDto::from).map(Article.ArticleResponse::from);
+            //case ID -> articleRepository.findByUserAccount_UserIdContaining(searchKeyword, pageable).map(Article.ArticleDto::from).map(Article.ArticleResponse::from);
+            //case NICKNAME -> articleRepository.findByUserAccount_NicknameContaining(searchKeyword, pageable).map(Article.ArticleDto::from).map(Article.ArticleResponse::from);
+    //}
 
     // 게시글 리스트 조회
-    public List<BoardResponseDto> findAll(){
-        Sort sort = Sort.by(Sort.Direction.DESC,"id","createdAt");
-        List<Board> list = boardRepository.findAll(sort);
-        return list.stream().map(BoardResponseDto::new).collect(Collectors.toList());
+    public Page<BoardResponseDto> findAll(Pageable pageable){
+        Page<Board> page = boardRepository.findAll(pageable);
+        return page.stream().map(BoardResponseDto::from);
     }
 
-    //삭제된 게시글 빼고 리스트 조회
-//    public List<BoardResponseDto> findAllWithoutDelete(boolean isDeleted) {
-//        Sort sort = Sort.by(Sort.Direction.DESC, "id", "createdDate");
-//        List<Board> list = boardRepository.findAllByDelete(true, sort);
-//        return list.stream().map(BoardResponseDto::new).collect(Collectors.toList());
-//    }
 
-    //게시글 수정
+
+    //게시글 수정 (변경점만 수정)
     // accountId 매개변수 추가 필요
-    public Long updateBoardById(Long id, BoardDto dto, BoardType boardType){
+    public Long updateBoardById(Long id, BoardDto dto){
         Board entity = boardRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("게시글 없음"));
-        entity.update(dto.getTitle(), dto.getContent());
+        //if(!entity.getBoardTitle().equals(dto.getBoardTitle()){
+        //entity.setBoardTitle(dto.getBoardTitle());
+        //}
         return id;
     }
 
     //게시글 삭제
     //accountId 매개변수 추가 필요
-    public Boolean deleteBoardById(Long id, BoardType boardType){
+    public Boolean deleteBoardById(Long id){
         Board entity = boardRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("게시글 없음"));
-        entity.delete();
-        return true;
+        return boardRepository.deleteById(id);
     }
 
-    //페이징
-    public Page<Board> paging(BoardType boardType, Pageable pageable){
-        return boardRepository.findAll(pageable);
-    }
+ 
 
-    // 검색 기능
-//    public Page<Board> search(String keyword, Pageable pageable) {
-//        Page<Board> postsList = boardRepository.findByTitleContaining(keyword, pageable);
-//        return postsList;
-//    }
+
 }
