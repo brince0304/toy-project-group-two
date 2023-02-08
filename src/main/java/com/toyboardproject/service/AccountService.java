@@ -5,13 +5,10 @@ import com.toyboardproject.dto.AccountRequestDto;
 import com.toyboardproject.repository.AccountRepository;
 import com.toyboardproject.utils.BcryptUtil;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NonUniqueResultException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,15 +18,17 @@ public class AccountService {
 
     private final BcryptUtil bcryptUtil;
 
-
-
-    private void validateDuplicateAccount(String userId) {
-        accountRepository.findByUserId(userId).ifPresent(u -> {
-            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
-        });
-    }
-
     public void createAccount(AccountRequestDto dto) {
+        if(accountRepository.findByUserId(dto.getUserId()).isPresent()) {
+            throw new NonUniqueResultException("이미 존재하는 아이디입니다.");
+        }
+        if(!checkExistUserNickname(dto.getUserNickname())) {
+            throw new NonUniqueResultException("이미 존재하는 닉네임입니다.");
+        }
+        if(dto.getIsAgreed() == null || !dto.getIsAgreed()) {
+            throw new IllegalArgumentException("약관에 동의해주세요.");
+        }
+
         Account account_= accountRepository.save(dto.toEntity());
         account_.setUserPassword(bcryptUtil.encode(account_.getUserPassword()));
     }
@@ -54,7 +53,9 @@ public class AccountService {
         return !accountRepository.existsByUserId(userId);
     }
 
-    public boolean checkExistUserNickName(String userNickName) {
+    public boolean checkExistUserNickname(String userNickName) {
         return !accountRepository.existsByUserNickname(userNickName);
     }
+
+
 }

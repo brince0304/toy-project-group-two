@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head th:insert="~{header.html :: head}">
+<head >
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" type="text/css" href="/fonts/iconic/css/material-design-iconic-font.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="/css/util.css">
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
     <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.3.1/css/all.css'>
 
     <!--===============================================================================================-->
@@ -21,7 +21,7 @@
 <header th:replace="~{/header.html :: header}">
   헤더
 </header>
-<div class="limiter" style="margin-top:30%">
+<div class="limiter" style="margin-top:2.5%">
     <div class="container-login100">
         <div class="wrap-login100">
             <form class="login100-form validate-form">
@@ -55,7 +55,7 @@
 							회원이 아니신가요?
 						</span>
 
-                    <a class="txt2" href="#">
+                    <a class="txt2" th:href="@{/account/sign-up}">
                         회원가입
                     </a>
                 </div>
@@ -76,18 +76,27 @@
 </script>
 
 <script src="/js/main.js"></script>
+<script src="/js/header.js"></script>
 
 </body>
 <script>
     function loginCheck(){
         const userId= $('#userId').val();
         const userPassword= $('#userPassword').val();
+        if(userId == ""){
+            alert("아이디를 입력해주세요");
+            return;
+        }
+        if(userPassword == ""){
+            alert("비밀번호를 입력해주세요");
+            return;
+        }
         $.ajax({
                 url: "/account/login?username="+userId+"&password="+userPassword,
                 type: "POST",
             success: function () {
-                        alert("로그인 성공");
-                        location.href="/";
+                        alert("환영합니다.");
+                        location.href="/board/post";
                 },
                 error: function () {
                     alert("로그인 실패");

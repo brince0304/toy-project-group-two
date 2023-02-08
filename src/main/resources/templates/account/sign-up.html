@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head th:insert="~{header.html :: head}">
+<head >
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -8,20 +8,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
-    <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="/fonts/iconic/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/util.css">
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
     <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.3.1/css/all.css'>
 
     <!--===============================================================================================-->
+    <style>
+        .validation{
+            opacity: 0.5;
+        }
+    </style>
 </head>
 <body>
 <header id="header" th:replace="~{/header.html :: header}">
     헤더
 </header>
-<div class="limiter" style="margin-top:30%">
+<div class="limiter" style="margin-top:2.5%">
     <div class="container-login100">
         <div class="wrap-login100">
             <form class="login100-form validate-form">
@@ -30,43 +35,44 @@
 					</span>
                 <div class="wrap-input100">
                     	<span class="btn-show-pass" style="cursor:pointer">
-                            <span class="badge bg-transparent text-secondary" style="margin-top:2%">중복확인</span>
-							<i class="fa fa-check" id="id-validate" style="color:darkgreen"></i>
+                            <span class="badge bg-transparent text-secondary validation" style="margin-top:2%" onclick="idCheck()">중복확인</span>
+							<i class="fa fa-check" id="id-validate" style="color:darkgreen;display: none"></i>
 						</span>
                     <input class="input100" type="text" name="userId" id="userId">
-                    <span class="focus-input100" data-placeholder="아이디를"></span>
+                    <span class="focus-input100" data-placeholder="아이디"></span>
                 </div>
 
-                <div class="wrap-input100 alert-validate" data-validate="Enter password">
+                <div class="wrap-input100" data-validate="Enter password">
 						<span class="btn-show-pass">
 							<i class="zmdi zmdi-eye password-validate" ></i>
 						</span>
                     <input class="input100" type="password" name="userPassword" id="userPassword">
                     <span class="focus-input100" data-placeholder="비밀번호"></span>
+                    <span style="display: none;color:darkred;font-size: 12px" id="password-invalid" >8자~15자로 입력해주세요.</span>
                 </div>
 
-                <div class="wrap-input100 validate-input" data-validate="불일치">
-						<span class="btn-show-pass">
-							<i class="zmdi zmdi-eye password-validate" ></i>
-						</span>
+                <div class="wrap-input100" >
+
                     <input class="input100" type="password" name="userPasswordCheck" id="userPasswordCheck">
                     <span class="focus-input100" data-placeholder="비밀번호 확인"></span>
+                    <span style="display: none;color:darkred;font-size: 12px" id="password-check-invalid" >비밀번호가 일치하지 않습니다.</span>
+
                 </div>
-                <div class="wrap-input100 validate-input" >
+                <div class="wrap-input100 " >
                     <input class="input100" type="text" name="userName">
                     <span class="focus-input100" data-placeholder="이름"></span>
                 </div>
 
-                <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-                    <input class="input100" type="text" name="userNickname" id="userNickname">
-                    <span class="btn-show-pass" style="cursor:pointer">
-                            <span class="badge bg-transparent text-secondary" style="margin-top:2%">중복확인</span>
-							<i class="fa fa-check" id="id-validate" style="color:darkgreen"></i>
+                <div class="wrap-input100">
+                    	<span class="btn-show-pass" style="cursor:pointer">
+                            <span class="badge bg-transparent text-secondary validation" style="margin-top:2%" onclick="nicknameCheck()">중복확인</span>
+							<i class="fa fa-check" id="nickname-validate" style="color:darkgreen;display: none"></i>
 						</span>
+                    <input class="input100" type="text" name="userNickname" id="userNickname">
                     <span class="focus-input100" data-placeholder="닉네임"></span>
                 </div>
 
-                <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+                <div class="wrap-input100" >
                     <input class="input100" type="text" name="userPhoneNum" id="userPhoneNum">
                     <span class="focus-input100" data-placeholder="휴대폰 번호"></span>
                 </div>
@@ -89,7 +95,7 @@
 							이미 회원이신가요?
 						</span>
 
-                    <a class="txt2" href="#">
+                    <a class="txt2" href="/account/login">
                         로그인
                     </a>
                 </div>
@@ -112,16 +118,135 @@
 </script>
 
 <script src="/js/main.js"></script>
+<script src="/js/header.js"></script>
 
 </body>
 <script>
+
+    $('.validation').mouseover(function () {
+        $(this).css('opacity', '1');
+    });
+
+    $('.validation').mouseout(function () {
+        $(this).css('opacity', '0.5');
+    });
+
+    var idCheckBoolean = false;
+    var nicknameCheckBoolean = false;
+    var passwordCheckBoolean = false;
+    var passwordCheck = false;
+
+    function idCheck(){
+        var userId = $('#userId').val();
+        if(userId.length < 6){
+            alert("아이디는 6자 이상 입력해주세요.");
+            return;
+        }
+        $.ajax({
+            url: '/account/check',
+            type: 'get',
+            data: {userId: userId},
+            success: function (data) {
+                if(data===true){
+                    $('#id-validate').css('display', 'block');
+                    $('#id-validate').css('color', 'darkgren');
+                    idCheckBoolean = true;
+                }else{
+                    $('#id-validate').css('display', 'block');
+                    $('#id-validate').css('color', 'darkgreen');
+                    idCheckBoolean = false;
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function nicknameCheck(){
+        var userNickname = $('#userNickname').val();
+        if(userNickname.length < 2){
+            alert("닉네임은 2자 이상 입력해주세요.");
+            return;
+        }
+        $.ajax({
+            url: '/account/check',
+            type: 'get',
+            data: {userNickname: userNickname},
+            success: function (data) {
+                if(data===true){
+                $('#nickname-validate').css('display', 'block');
+                $('#nickname-validate').css('color', 'darkgreen');
+                nicknameCheckBoolean = true;}
+                else{
+                    $('#nickname-validate').css('display', 'block');
+                    $('#nickname-validate').css('color', 'red');
+                    nicknameCheckBoolean = false;
+                }
+            }
+            ,error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    $('#userPasswordCheck').keyup(function () {
+        var userPassword = $('#userPassword').val();
+        var userPasswordCheck = $('#userPasswordCheck').val();
+        if(userPassword != userPasswordCheck){
+            $('#password-check-invalid').css('display', 'block');
+            passwordCheckBoolean = false;
+        }else{
+            $('#password-check-invalid').css('display', 'none');
+            passwordCheckBoolean = true;
+        }
+    });
+
+
+    $('#userPassword').keyup(function () {
+        var userPassword = $('#userPassword').val();
+        var userPasswordCheck = $('#userPasswordCheck').val();
+        if(userPassword.length<8 || userPassword.length>15){
+            $('#password-invalid').css('display', 'block');
+            passwordCheck = false;
+        }else{
+            $('#password-invalid').css('display', 'none');
+            passwordCheck = true;
+        }
+    });
+
+
+
     function signUp(){
         const userId = $('#userId').val();
         const userPassword = $('#userPassword').val();
         const userName = $('#userName').val();
         const userNickname = $('#userNickname').val();
         const userPhoneNum = $('#userPhoneNum').val();
+        const agree = $('#agree').is(':checked');
+       if(userPhoneNum.includes('-')){
+           userPhoneNum.replace('-','');
+         }
+       if(userPhoneNum.includes(' ')){
+           userPhoneNum.replace(' ','');
 
+           if(!passwordCheck){
+                alert('비밀번호는 8~15자리로 입력해주세요.');
+                return;
+           }}
+        if(!idCheckBoolean){
+            alert('아이디 중복체크를 해주세요.');
+            return;}
+        if(!nicknameCheckBoolean){
+            alert('닉네임 중복체크를 해주세요.');
+            return;}
+        if(!passwordCheckBoolean){
+            alert('비밀번호가 일치하지 않습니다.');
+            return;}
+        if(!agree){
+            alert('약관에 동의해주세요.');
+            return;
+        }
         $.ajax({
             url: '/account/sign-up',
             type: 'POST',
@@ -130,15 +255,16 @@
                 userPassword: userPassword,
                 userName: userName,
                 userNickname: userNickname,
-                userPhoneNum: userPhoneNum
+                userPhoneNum: userPhoneNum,
+                isAgreed: agree
             }),
             contentType: "application/json; charset=utf-8",
             success: function (data) {
-                    alert('회원가입 성공');
-                    location.href = '/user/login';
+                    alert('가입되셨습니다. '+data+'님 환영합니다.');
+                    location.href = '/account/login';
             },
-            error: function (error) {
-                alert('회원가입 실패');
+            error: function (data) {
+                alert(data.responseText);
             }
         })
     }
