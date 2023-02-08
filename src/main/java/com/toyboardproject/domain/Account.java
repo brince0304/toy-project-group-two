@@ -46,6 +46,9 @@ public class Account extends AuditingFields {
 
     private LocalDateTime deletedAt;
 
+    @Setter
+    private Boolean isAgreed;
+
     @OneToMany (mappedBy="account", cascade=CascadeType.ALL)
     @ToString.Exclude
     @Builder.Default

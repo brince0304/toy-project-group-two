@@ -138,38 +138,54 @@
 
     function idCheck(){
         var userId = $('#userId').val();
+        if(userId.length < 6){
+            alert("아이디는 6자 이상 입력해주세요.");
+            return;
+        }
         $.ajax({
-            url: '/user/check',
-            type: 'post',
+            url: '/account/check',
+            type: 'get',
             data: {userId: userId},
             success: function (data) {
-                $('#id-validate').css('display', 'block');
-                $('#id-validate').css('color', 'darkgreen');
-                idCheckBoolean = true;
-            }
-            ,error: function (data) {
-                $('#id-validate').css('display', 'block');
-                $('#id-validate').css('color', 'red');
-                idCheckBoolean = false;
+                if(data===true){
+                    $('#id-validate').css('display', 'block');
+                    $('#id-validate').css('color', 'darkgren');
+                    idCheckBoolean = true;
+                }else{
+                    $('#id-validate').css('display', 'block');
+                    $('#id-validate').css('color', 'darkgreen');
+                    idCheckBoolean = false;
+                }
+            },
+            error: function (error) {
+                console.log(error);
             }
         });
     }
 
     function nicknameCheck(){
         var userNickname = $('#userNickname').val();
+        if(userNickname.length < 2){
+            alert("닉네임은 2자 이상 입력해주세요.");
+            return;
+        }
         $.ajax({
-            url: '/user/check',
-            type: 'post',
+            url: '/account/check',
+            type: 'get',
             data: {userNickname: userNickname},
             success: function (data) {
+                if(data===true){
                 $('#nickname-validate').css('display', 'block');
                 $('#nickname-validate').css('color', 'darkgreen');
-                nicknameCheckBoolean = true;
+                nicknameCheckBoolean = true;}
+                else{
+                    $('#nickname-validate').css('display', 'block');
+                    $('#nickname-validate').css('color', 'red');
+                    nicknameCheckBoolean = false;
+                }
             }
             ,error: function (data) {
-                $('#nickname-validate').css('display', 'block');
-                $('#nickname-validate').css('color', 'red');
-                nicknameCheckBoolean = false;
+                console.log(data);
             }
         });
     }
@@ -239,15 +255,16 @@
                 userPassword: userPassword,
                 userName: userName,
                 userNickname: userNickname,
-                userPhoneNum: userPhoneNum
+                userPhoneNum: userPhoneNum,
+                isAgreed: agree
             }),
             contentType: "application/json; charset=utf-8",
             success: function (data) {
-                    alert('회원가입 성공');
-                    location.href = '/user/login';
+                    alert('가입되셨습니다. '+data+'님 환영합니다.');
+                    location.href = '/account/login';
             },
-            error: function (error) {
-                alert('회원가입 실패');
+            error: function (data) {
+                alert(data.responseText);
             }
         })
     }

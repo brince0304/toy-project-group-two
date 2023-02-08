@@ -95,8 +95,8 @@
                 url: "/account/login?username="+userId+"&password="+userPassword,
                 type: "POST",
             success: function () {
-                        alert("로그인 성공");
-                        location.href="/";
+                        alert("환영합니다.");
+                        location.href="/board/post";
                 },
                 error: function () {
                     alert("로그인 실패");

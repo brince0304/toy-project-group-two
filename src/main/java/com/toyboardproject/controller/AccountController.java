@@ -10,10 +10,7 @@ import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RequiredArgsConstructor
@@ -34,6 +31,17 @@ public class AccountController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("account/login");
         return mv;
+    }
+    @GetMapping("/account/check")
+    public ResponseEntity<?> checkExist(@RequestParam (required = false) String userId,
+                                        @RequestParam (required = false) String userNickname) {
+        if(userId!=null){
+           return new ResponseEntity<>(accountService.checkExistUserId(userId),HttpStatus.OK);
+        }
+        if(userNickname!=null){
+            return new ResponseEntity<>(accountService.checkExistUserNickname(userNickname),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/account/sign-up")
