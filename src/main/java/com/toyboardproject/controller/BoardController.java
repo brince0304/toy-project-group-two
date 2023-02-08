@@ -45,7 +45,7 @@ public class BoardController {
     // 게시글 생성 및 수정 페이지 요청
     @GetMapping("/post")
     @AuthCheck
-    public ModelAndView getBoardInsertForm(@RequestParam BoardType type,@RequestParam(required = false) Long id,@AuthenticationPrincipal PrincipalDto principal) {
+    public ModelAndView getBoardInsertForm(@RequestParam(required = false) BoardType type,@RequestParam(required = false) Long id,@AuthenticationPrincipal PrincipalDto principal) {
         ModelAndView mav = new ModelAndView();
         BoardResponseDto responseDtoId = boardService.findBoardById(id);
         mav.addObject("boardType", type);
@@ -69,7 +69,7 @@ public class BoardController {
 
     //게시글 리스트 페이지
     @GetMapping("/")
-    public ModelAndView boardList(@RequestParam BoardType type, @RequestParam SearchType searchType, @RequestParam String keyword, Pageable pageable) {
+    public ModelAndView boardList(@RequestParam(required = false) BoardType type, @RequestParam(required = false) SearchType searchType, @RequestParam(required = false) String keyword, Pageable pageable) {
         Page<BoardResponseDto> response = boardService.searchBoardByKeywordAndSearchTypeAndBoardType(pageable,type,searchType,keyword);
         ModelAndView mav = new ModelAndView();
         mav.setViewName("/board/index");
