@@ -1,13 +1,7 @@
-package com.toyboardproject.Controller;
+package com.toyboardproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toyboardproject.repository.AccountRepository;
-import com.toyboardproject.repository.BoardRepository;
-import com.toyboardproject.service.BoardCommentService;
 import com.toyboardproject.config.SecurityConfig;
-import com.toyboardproject.domain.Account;
-import com.toyboardproject.domain.Board;
-import com.toyboardproject.domain.BoardType;
 import com.toyboardproject.dto.BoardCommentRequestDto;
 
 
@@ -22,12 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 
 
@@ -38,19 +31,12 @@ class BoardCommentControllerTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
-
-
-
-
-
-
-
     @DisplayName("[Controller] 댓글 저장 성공 테스트")
     @WithUserDetails("test")
     @Test
     public void createBoardCommentTest() throws Exception {
         BoardCommentRequestDto request = BoardCommentRequestDto.builder()
-                .commentContent("test2......")
+                .commentContent("test3......")
                 .boardId(1L)
                 .build();
 
@@ -60,30 +46,18 @@ class BoardCommentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andDo(print());
-//
-//        boolean check = commentService.createBoardComment(request);
-//        System.out.println(check);
     }
 
 
     @DisplayName("[Controller] 댓글 목록 성공 테스트")
     @Test
     public void getListTest() throws Exception{
-
-
         mockMvc.perform(get("/comment/")
-                        .content("{ \"boardId\" : 1}")
+                        .param("boardId", String.valueOf(1))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andDo(print());
-
-
-//        List<BoardCommentResponseDto> result = commentService.getBoardCommentsByBoardId(1L);
-//
-//        for(BoardCommentResponseDto response : result){
-//            System.out.println(response.toString());
-//        }
     }
 
     @WithUserDetails("test")
@@ -91,11 +65,10 @@ class BoardCommentControllerTest {
     @Test
     public void updateComment() throws Exception {
         BoardCommentRequestDto request = BoardCommentRequestDto.builder()
-                .commentContent("Update test2.......")
+                .commentContent("Update test6.......")
                 .boardId(1L)
                 .id(8L)
                 .build();
-
 
         mockMvc.perform(put("/comment/")
                         .content(objectMapper.writeValueAsString(request))
@@ -104,25 +77,19 @@ class BoardCommentControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andDo(print());
 
-//        boolean check = commentService.updateBoardComment(request);
-//        System.out.println(check);
     }
 
 
+    @Disabled
     @WithUserDetails("test")
     @DisplayName("[Controller] 댓글 삭제 성공 테스트")
     @Test
-    @Disabled
     public void deleteComment() throws Exception{
-//        given(commentService.deleteBoardCommentByCommentId(any(Long.class)))
-//                .willReturn(any(Boolean.class));
-//
-//        mockMvc.perform(delete("/comment/")
-//                        .content("{ \"commentId\" : 5}")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-//                .andDo(print());
-
+        mockMvc.perform(delete("/comment/")
+                        .param("commentId", String.valueOf(6))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andDo(print());
     }
 }

@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -39,13 +38,18 @@ public class BoardCommentService {
 
     // 댓글 수정 로직
     public void updateBoardComment(BoardCommentRequestDto boardCommentRequestDto){
-        BoardComment result = boardCommentRepository.findById(boardCommentRequestDto.getId()).orElseThrow(()-> new EntityNotFoundException("없는 댓글입니다."));
+        BoardComment result = boardCommentRepository.findById(boardCommentRequestDto.getId())
+                .orElseThrow(()-> new EntityNotFoundException("존재하지 않는 댓글입니다."));
+
         result.setCommentContent(boardCommentRequestDto.getCommentContent());
+
+        boardCommentRepository.save(result);
     }
 
     // 댓글 삭제 로직
     public void deleteBoardCommentByCommentId(Long id){
-        BoardComment comment = boardCommentRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("없는 댓글입니다."));
+        BoardComment comment = boardCommentRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("존재하지 않는 댓글입니다."));
         boardCommentRepository.deleteById(id);
     }
 }
