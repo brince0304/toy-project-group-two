@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
 @EnableWebSecurity
@@ -33,7 +34,6 @@ public class SecurityConfig {
                         .successHandler(new LoginSuccessHandlerCustom())
                         .permitAll()
                         .failureHandler((request, response, exception) -> {
-                            log.warn("login fail");
                             response.sendError(401, "로그인에 실패하였습니다.");
                         })
                         .failureUrl("/account/login")
@@ -42,9 +42,9 @@ public class SecurityConfig {
                         .logoutRequestMatcher(new AntPathRequestMatcher("/account/logout"))
                         .logoutSuccessHandler(new LogoutSuccessHandlerCustrom())
                         .deleteCookies("JSESSIONID")
-                        .invalidateHttpSession(true)
+                        
                 ).csrf().disable()
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/**").permitAll()
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/**","/css/**", "/js/**", "/img/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();
@@ -58,6 +58,7 @@ public class SecurityConfig {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
+
 
 
     @Bean
