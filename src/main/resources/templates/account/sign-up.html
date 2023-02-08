@@ -39,7 +39,7 @@
 							<i class="fa fa-check" id="id-validate" style="color:darkgreen;display: none"></i>
 						</span>
                     <input class="input100" type="text" name="userId" id="userId">
-                    <span class="focus-input100" data-placeholder="아이디를"></span>
+                    <span class="focus-input100" data-placeholder="아이디"></span>
                 </div>
 
                 <div class="wrap-input100" data-validate="Enter password">
@@ -52,9 +52,7 @@
                 </div>
 
                 <div class="wrap-input100" >
-						<span class="btn-show-pass">
-							<i class="zmdi zmdi-eye password-validate" ></i>
-						</span>
+
                     <input class="input100" type="password" name="userPasswordCheck" id="userPasswordCheck">
                     <span class="focus-input100" data-placeholder="비밀번호 확인"></span>
                     <span style="display: none;color:darkred;font-size: 12px" id="password-check-invalid" >비밀번호가 일치하지 않습니다.</span>
@@ -65,12 +63,12 @@
                     <span class="focus-input100" data-placeholder="이름"></span>
                 </div>
 
-                <div class="wrap-input100 " data-validate = "Valid email is: a@b.c">
-                    <input class="input100" type="text" name="userNickname" id="userNickname">
-                    <span class="btn-show-pass" style="cursor:pointer">
-                            <span class="badge bg-transparent text-secondary validation" style="margin-top:2%">중복확인</span>
-							<i class="fa fa-check" id="nickname-validate" style="color:darkgreen;display: none;"></i>
+                <div class="wrap-input100">
+                    	<span class="btn-show-pass" style="cursor:pointer">
+                            <span class="badge bg-transparent text-secondary validation" style="margin-top:2%" onclick="nicknameCheck()">중복확인</span>
+							<i class="fa fa-check" id="nickname-validate" style="color:darkgreen;display: none"></i>
 						</span>
+                    <input class="input100" type="text" name="userNickname" id="userNickname">
                     <span class="focus-input100" data-placeholder="닉네임"></span>
                 </div>
 

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class BoardCommentResponseDto {
     private Long id;
     private Long boardId;
-    private Long userId;
+    private String userId;
     private String commentContent;
     private String userNickname;
     private LocalDateTime createdAt;
@@ -25,7 +25,7 @@ public class BoardCommentResponseDto {
         return BoardCommentResponseDto.builder()
                 .id(boardComment.getId())
                 .boardId(boardComment.getBoard().getId())
-                .userId(boardComment.getAccount().getId())
+                .userId(boardComment.getAccount().getUserId())
                 .commentContent(boardComment.getCommentContent())
                 .userNickname(boardComment.getAccount().getUserNickname())
                 .createdAt(boardComment.getCreatedAt())

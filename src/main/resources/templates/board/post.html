@@ -68,15 +68,7 @@
     var titleCheck = false;
     var contentCheck = false;
 
-    $('#title').blur(function(){
-        if($(this).val().length < 2 || $(this).val().length > 50){
-            $('#title-warning').show();
-            titleCheck = false;
-        }else if($(this).val().length >= 2 || $(this).val().length <= 50){
-            $('.title-warning').hide();
-            titleCheck = true;
-        }
-    });
+
 
     $('#content').keyup(function(){
         if($(this).val().length < 10 || $(this).val().length > 500){
@@ -85,6 +77,16 @@
         }else if($(this).val().length >= 10 || $(this).val().length <= 500){
             $('#content-warning').hide();
             contentCheck = true;
+        }
+    });
+
+    $('#title').keyup(function(){
+        if($(this).val().length < 2 || $(this).val().length > 50){
+            $('#title-warning').show();
+            titleCheck = false;
+        }else if($(this).val().length >= 2 || $(this).val().length <= 50){
+            $('#title-warning').hide();
+            titleCheck = true;
         }
     });
 

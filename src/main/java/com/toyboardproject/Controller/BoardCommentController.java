@@ -42,8 +42,8 @@ public class BoardCommentController {
     /**
      * 댓글 목록 불러오기
      * */
-    @GetMapping("/comment/")
-    public ResponseEntity<List<BoardCommentResponseDto>> getList(Long boardId){
+    @GetMapping("/comment/{boardId}")
+    public ResponseEntity<List<BoardCommentResponseDto>> getList(@PathVariable Long boardId){
         List<BoardCommentResponseDto> commentList = boardCommentService.getBoardCommentsByBoardId(boardId);
         return new ResponseEntity<>(commentList, HttpStatus.OK);
     }
@@ -53,7 +53,7 @@ public class BoardCommentController {
      */
     @BindingCheck
     @AuthCheck
-    @PutMapping("/comment/")
+    @PutMapping("/comment")
     public ResponseEntity<Boolean> updateComment(@AuthenticationPrincipal PrincipalDto principal,
                                                   @Valid @RequestBody BoardCommentRequestDto boardCommentRequestDto,
                                                   BindingResult bindingResult){
@@ -66,9 +66,9 @@ public class BoardCommentController {
      * 댓글 삭제 기능
      */
     @AuthCheck
-    @DeleteMapping("/comment/")
+    @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<Boolean> deleteComment(@AuthenticationPrincipal PrincipalDto principal,
-                                                  Long commentId){
+                                                 @PathVariable Long commentId){
         log.info("댓글 삭제 기능 수행");
 
         boardCommentService.deleteBoardCommentByCommentId(commentId);
