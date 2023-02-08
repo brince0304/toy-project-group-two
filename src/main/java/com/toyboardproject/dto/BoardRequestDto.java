@@ -21,6 +21,7 @@ public class BoardRequestDto {
 
     private BoardType boardType;
 
+
     @Builder
     public BoardRequestDto(String title, String content, BoardType boardType) {
         this.title = title;
