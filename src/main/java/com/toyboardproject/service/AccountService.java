@@ -5,6 +5,7 @@ import com.toyboardproject.dto.AccountRequestDto;
 import com.toyboardproject.repository.AccountRepository;
 import com.toyboardproject.utils.BcryptUtil;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NonUniqueResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,15 +22,14 @@ public class AccountService {
 
     private final BcryptUtil bcryptUtil;
 
-
-
-    private void validateDuplicateAccount(String userId) {
-        accountRepository.findByUserId(userId).ifPresent(u -> {
-            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
-        });
-    }
-
     public void createAccount(AccountRequestDto dto) {
+        if(accountRepository.findByUserId(dto.getUserId()).isPresent()) {
+            throw new NonUniqueResultException("이미 존재하는 아이디입니다.");
+        }
+        if(!checkExistUserNickName(dto.getUserNickname())) {
+            throw new NonUniqueResultException("이미 존재하는 닉네임입니다.");
+        }
+
         Account account_= accountRepository.save(dto.toEntity());
         account_.setUserPassword(bcryptUtil.encode(account_.getUserPassword()));
     }

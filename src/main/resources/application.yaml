@@ -1,14 +1,14 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/my-db-test;mode=MySQL
+    url: jdbc:mysql://localhost:3306/account?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     defer-datasource-initialization: true
     open-in-view: true
 
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: create-drop
     generate-ddl: true
     show-sql: true
     properties:
