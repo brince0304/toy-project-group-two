@@ -48,7 +48,7 @@ public class BoardController {
     @GetMapping("/{id}")
     public ModelAndView findBoardById(@PathVariable Long id) {
         BoardResponseDto responseDto = boardService.findBoardById(id);
-        ModelAndView mav = new ModelAndView();
+        ModelAndView mav = new ModelAndView("board/detail");
         mav.addObject("boardResponse",responseDto);
         //mav.setViewName("상세뷰")
         return mav;
