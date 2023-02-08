@@ -26,6 +26,9 @@ public class AccountService {
         if(accountRepository.findByUserId(dto.getUserId()).isPresent()) {
             throw new NonUniqueResultException("이미 존재하는 아이디입니다.");
         }
+        if(!checkExistUserNickName(dto.getUserNickname())) {
+            throw new NonUniqueResultException("이미 존재하는 닉네임입니다.");
+        }
 
         Account account_= accountRepository.save(dto.toEntity());
         account_.setUserPassword(bcryptUtil.encode(account_.getUserPassword()));
