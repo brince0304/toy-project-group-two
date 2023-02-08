@@ -10,13 +10,13 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@Entity
 @Getter
 @Where(clause = "is_deleted = false")
-@SQLDelete(sql = "UPDATE account SET is_deleted = true, deleted_at=now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE board SET is_deleted = true, deleted_at=now() WHERE id = ?")
+@Entity
 public class Board extends AuditingFields  {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -34,11 +34,11 @@ public class Board extends AuditingFields  {
 
     private LocalDateTime deletedAt;
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne (fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     private Account account;
 
     @Builder.Default
-    @OneToMany (mappedBy="board", cascade=CascadeType.ALL)
+    @OneToMany (mappedBy="board", cascade = CascadeType.ALL)
     private Set<BoardComment> boardComments = new LinkedHashSet<>();
 
     @Enumerated
