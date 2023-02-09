@@ -2,4 +2,13 @@ insert into ACCOUNT (CREATED_AT, MODIFIED_AT, DELETED_AT, IS_DELETED, USER_ID, U
 VALUES (now(),now(),null,false,'test','test','test','$2a$10$DAd.J6N1fv8ecD0UsYKOu.yPnrAQe.lw4pJmLaX6d3fhJ5Bzllw5.','test');
 
 insert into BOARD (CREATED_AT, MODIFIED_AT, DELETED_AT, IS_DELETED, BOARD_TITLE, BOARD_CONTENT, BOARD_TYPE,ACCOUNT_ID)
-values (now(),now(),null,false,'test','test4214',2,1);
+values (now(),now(),null,false,'test','test4214','FREE',1);
+
+insert into ACCOUNT_ROLES (ACCOUNT_ID,ROLES)
+values (1,'ROLE_ADMIN');
+
+insert into ACCOUNT (CREATED_AT, MODIFIED_AT, DELETED_AT, IS_DELETED, USER_ID, USER_NAME, USER_NICKNAME, USER_PASSWORD, USER_PHONE_NUM)
+VALUES (now(),now(),null,false,'test2','test2','test2','$2a$10$DAd.J6N1fv8ecD0UsYKOu.yPnrAQe.lw4pJmLaX6d3fhJ5Bzllw5.','test2');
+
+insert into ACCOUNT_ROLES (ACCOUNT_ID,ROLES)
+values (2,'ROLE_USER');

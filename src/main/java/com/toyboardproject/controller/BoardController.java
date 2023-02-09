@@ -2,6 +2,7 @@ package com.toyboardproject.controller;
 
 import com.toyboardproject.Annotation.AuthCheck;
 import com.toyboardproject.Annotation.BindingCheck;
+import com.toyboardproject.Annotation.BoardAuthorCheck;
 import com.toyboardproject.domain.BoardType;
 import com.toyboardproject.domain.SearchType;
 import com.toyboardproject.dto.BoardRequestDto;
@@ -116,6 +117,7 @@ public class BoardController {
 
     // 게시글 업데이트
     @AuthCheck
+    @BoardAuthorCheck
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateBoardById(@PathVariable Long id, @Valid @RequestBody BoardRequestDto dto, @AuthenticationPrincipal PrincipalDto principal, BindingResult bindingResult){
         return new ResponseEntity<>(boardService.updateBoardById(id, dto), HttpStatus.OK);
@@ -123,6 +125,7 @@ public class BoardController {
 
     // 게시글 삭제
     @AuthCheck
+    @BoardAuthorCheck
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteBoardById(@PathVariable Long id, @AuthenticationPrincipal PrincipalDto principal){
         boardService.deleteBoardById(id);

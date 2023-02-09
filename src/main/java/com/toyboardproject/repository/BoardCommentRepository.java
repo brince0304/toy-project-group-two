@@ -12,4 +12,6 @@ import java.util.List;
 public interface BoardCommentRepository extends JpaRepository<BoardComment, Long> {
     @EntityGraph(attributePaths = {"account"})
     List<BoardComment> findByBoard(Board board);
+
+    List<BoardComment> findByBoardId(Long boardId);
 }

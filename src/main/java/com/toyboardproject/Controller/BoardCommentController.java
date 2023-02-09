@@ -4,6 +4,8 @@ package com.toyboardproject.controller;
 
 import com.toyboardproject.Annotation.AuthCheck;
 import com.toyboardproject.Annotation.BindingCheck;
+import com.toyboardproject.Annotation.BoardAuthorCheck;
+import com.toyboardproject.Annotation.BoardCommentAuthorCheck;
 import com.toyboardproject.dto.BoardCommentRequestDto;
 import com.toyboardproject.dto.BoardCommentResponseDto;
 import com.toyboardproject.dto.PrincipalDto;
@@ -53,6 +55,7 @@ public class BoardCommentController {
      */
     @BindingCheck
     @AuthCheck
+    @BoardCommentAuthorCheck
     @PutMapping("/comment")
     public ResponseEntity<Boolean> updateComment(@AuthenticationPrincipal PrincipalDto principal,
                                                   @Valid @RequestBody BoardCommentRequestDto boardCommentRequestDto,
@@ -66,6 +69,7 @@ public class BoardCommentController {
      * 댓글 삭제 기능
      */
     @AuthCheck
+    @BoardCommentAuthorCheck
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<Boolean> deleteComment(@AuthenticationPrincipal PrincipalDto principal,
                                                  @PathVariable Long commentId){
