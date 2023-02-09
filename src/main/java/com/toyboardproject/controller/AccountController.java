@@ -32,6 +32,7 @@ public class AccountController {
         mv.setViewName("account/login");
         return mv;
     }
+
     @GetMapping("/account/check")
     public ResponseEntity<?> checkExist(@RequestParam (required = false) String userId,
                                         @RequestParam (required = false) String userNickname) {

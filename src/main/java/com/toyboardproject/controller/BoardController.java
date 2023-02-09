@@ -71,6 +71,7 @@ public class BoardController {
     }
 
     //게시글 상세 페이지
+    @AuthCheck
     @GetMapping("/{id}")
     public ModelAndView findBoardById(@PathVariable Long id) {
         ModelAndView mav = new ModelAndView("board/detail");
@@ -80,6 +81,7 @@ public class BoardController {
     }
 
     //게시글 리스트 페이지
+    @AuthCheck
     @GetMapping("/")
     public ModelAndView boardList(@RequestParam BoardType type, @RequestParam(required = false) SearchType searchType
             , @RequestParam(required = false) String keyword
@@ -102,7 +104,7 @@ public class BoardController {
         mav.addObject("keyword",keyword);
         return mav;
     }
-
+    @AuthCheck
     @GetMapping("/faq/{type}")
     public ModelAndView faqList(@PathVariable BoardType type
             ,@PageableDefault(sort="createdAt",direction = Sort.Direction.DESC) Pageable pageable) {

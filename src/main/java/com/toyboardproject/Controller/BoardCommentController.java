@@ -44,6 +44,7 @@ public class BoardCommentController {
     /**
      * 댓글 목록 불러오기
      * */
+    @AuthCheck
     @GetMapping("/comment/{boardId}")
     public ResponseEntity<List<BoardCommentResponseDto>> getList(@PathVariable Long boardId){
         List<BoardCommentResponseDto> commentList = boardCommentService.getBoardCommentsByBoardId(boardId);
