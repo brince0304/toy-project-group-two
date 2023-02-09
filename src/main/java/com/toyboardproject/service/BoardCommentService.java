@@ -61,4 +61,11 @@ public class BoardCommentService {
                 .orElseThrow(()-> new EntityNotFoundException("존재하지 않는 댓글입니다."));
         boardCommentRepository.deleteById(id);
     }
+
+    public boolean isBoardCommentOwner(Long id, PrincipalDto principal) {
+        BoardComment comment = boardCommentRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("존재하지 않는 댓글입니다."));
+
+        return comment.getAccount().getId().equals(principal.getId());
+    }
 }

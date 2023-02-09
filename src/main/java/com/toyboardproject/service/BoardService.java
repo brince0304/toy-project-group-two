@@ -57,6 +57,12 @@ public class BoardService {
         };
     }
 
+    public boolean isBoardOwner(Long id, PrincipalDto principal){
+        Board board = boardRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("해당 게시글이 없습니다"));
+        return board.getAccount().getId().equals(principal.getId());
+    }
+
         //게시글 수정
     public Long updateBoardById(Long id, BoardRequestDto dto){
         Board entity = boardRepository.findById(id).orElseThrow(()
