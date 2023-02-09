@@ -38,7 +38,7 @@ public class BoardCommentService {
     // 댓글 목록 반환 로직
     public List<BoardCommentResponseDto> getBoardCommentsByBoardId(Long boardId){
         Board board = boardRepository.findById(boardId).orElseThrow(
-                ()-> new EntityNotFoundException("존재하지 않는 댓글입니다."));
+                ()-> new EntityNotFoundException("존재하지 않는 게시글입니다."));
 
         List<BoardComment> comments = boardCommentRepository.findByBoard(board);
 
