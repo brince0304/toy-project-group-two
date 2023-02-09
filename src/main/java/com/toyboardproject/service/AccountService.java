@@ -1,6 +1,7 @@
 package com.toyboardproject.service;
 
 import com.toyboardproject.domain.Account;
+import com.toyboardproject.domain.AccountRole;
 import com.toyboardproject.dto.AccountRequestDto;
 import com.toyboardproject.repository.AccountRepository;
 import com.toyboardproject.utils.BcryptUtil;
@@ -31,6 +32,7 @@ public class AccountService {
 
         Account account_= accountRepository.save(dto.toEntity());
         account_.setUserPassword(bcryptUtil.encode(account_.getUserPassword()));
+        account_.getRoles().add(AccountRole.ROLE_USER);
     }
 
     public void deleteAccountById(Long id) {

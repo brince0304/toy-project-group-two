@@ -1,12 +1,14 @@
 package com.toyboardproject.dto;
 
 import com.toyboardproject.domain.Account;
+import com.toyboardproject.domain.AccountRole;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Builder
 @Data

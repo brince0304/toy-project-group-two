@@ -7,6 +7,7 @@ import org.hibernate.annotations.Where;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -48,6 +49,13 @@ public class Account extends AuditingFields {
 
     @Setter
     private Boolean isAgreed;
+
+    @Setter
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Set<AccountRole> roles = new HashSet<>();
+
 
     @OneToMany (mappedBy="account", cascade=CascadeType.ALL)
     @ToString.Exclude

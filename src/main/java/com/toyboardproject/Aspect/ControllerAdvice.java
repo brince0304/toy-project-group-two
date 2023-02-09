@@ -16,4 +16,10 @@ public class ControllerAdvice {
     public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException e) {
         return  new ResponseEntity<>(e.getMessage(), org.springframework.http.HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
+        return new ResponseEntity<>(e.getMessage(), org.springframework.http.HttpStatus.BAD_REQUEST);
+    }
+
 }
