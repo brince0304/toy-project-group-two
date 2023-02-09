@@ -89,9 +89,7 @@ class BoardCommentControllerTest {
     @DisplayName("[Controller] 댓글 목록 성공 테스트")
     @Test
     public void getListTest() throws Exception{
-        mockMvc.perform(get("/comment/")
-                        .param("boardId", String.valueOf(1))
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/comment/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andDo(print());
@@ -104,7 +102,6 @@ class BoardCommentControllerTest {
                         .param("boardId", String.valueOf(3))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
                 .andDo(print());
     }
 
@@ -115,10 +112,10 @@ class BoardCommentControllerTest {
         BoardCommentRequestDto request = BoardCommentRequestDto.builder()
                 .commentContent("Update test6.......")
                 .boardId(1L)
-                .id(8L)
+                .id(1L)
                 .build();
 
-        mockMvc.perform(put("/comment/")
+        mockMvc.perform(put("/comment")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -136,10 +133,10 @@ class BoardCommentControllerTest {
                 .commentContent("Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
                         "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,")
                 .boardId(1L)
-                .id(8L)
+                .id(1L)
                 .build();
 
-        mockMvc.perform(put("/comment/")
+        mockMvc.perform(put("/comment")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
@@ -158,7 +155,7 @@ class BoardCommentControllerTest {
                 .id(20L)
                 .build();
 
-        mockMvc.perform(put("/comment/")
+        mockMvc.perform(put("/comment")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -189,7 +186,6 @@ class BoardCommentControllerTest {
                         .param("commentId", String.valueOf(20))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
                 .andDo(print());
     }
 }

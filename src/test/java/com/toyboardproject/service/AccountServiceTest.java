@@ -2,6 +2,7 @@ package com.toyboardproject.service;
 
 import com.toyboardproject.dto.AccountRequestDto;
 import com.toyboardproject.repository.AccountRepository;
+import com.toyboardproject.utils.BcryptUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +22,8 @@ class AccountServiceTest {
 
     @Mock
     AccountRepository accountRepository;
+    @Mock
+    BcryptUtil bcryptUtil;
 
     @Test
     void createAccountTest() {
@@ -28,7 +31,8 @@ class AccountServiceTest {
                 .userId("test")
                 .userPassword("test")
                 .userNickname("test")
-                .userPhoneNum("test").build();
+                .userPhoneNum("test").isAgreed(true).build();
+        given(accountRepository.save(any())).willReturn(dto.toEntity());
         accountService.createAccount(dto);
         then(accountRepository).should().save(any());
     }

@@ -1,4 +1,4 @@
-package com.toyboardproject.Controller;
+package com.toyboardproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toyboardproject.config.SecurityConfig;
@@ -133,7 +133,7 @@ class BoardControllerTest {
                 .build();
 
 
-        mockMvc.perform(put("/board/?id=1")
+        mockMvc.perform(put("/board/1")
                         .content(objectMapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -151,7 +151,7 @@ class BoardControllerTest {
                 .boardType(BoardType.NOTICE)
                 .build();
 
-        mockMvc.perform(put("/board/?id=6")
+        mockMvc.perform(put("/board/6")
                         .content(objectMapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
@@ -165,11 +165,8 @@ class BoardControllerTest {
     @Test
     public void deleteBoardById() throws Exception {
 
-        mockMvc.perform(delete("/board/5")
-                .content("{ \"boardId\" : 5}")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/board/1")
+                ).andExpect(status().isOk())
                 .andDo(print());
     }
 

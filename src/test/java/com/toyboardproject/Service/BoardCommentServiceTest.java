@@ -1,11 +1,13 @@
 package com.toyboardproject.service;
 
+import com.toyboardproject.dto.BoardRequestDto;
 import com.toyboardproject.dto.PrincipalDto;
 import com.toyboardproject.repository.BoardCommentRepository;
 import com.toyboardproject.domain.Board;
 import com.toyboardproject.domain.BoardComment;
 import com.toyboardproject.dto.BoardCommentRequestDto;
 
+import com.toyboardproject.repository.BoardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,8 @@ import static org.mockito.BDDMockito.then;
 class BoardCommentServiceTest {
     @Mock
     private BoardCommentRepository boardCommentRepository;
+    @Mock
+    private BoardRepository boardRepository;
 
     @InjectMocks
     private BoardCommentService boardCommentService;
