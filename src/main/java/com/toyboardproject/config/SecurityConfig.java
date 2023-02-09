@@ -36,13 +36,12 @@ public class SecurityConfig {
                         .failureHandler((request, response, exception) -> {
                             response.sendError(401, "로그인에 실패하였습니다.");
                         })
-                        .failureUrl("/account/login")
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/account/logout"))
                         .logoutSuccessHandler(new LogoutSuccessHandlerCustrom())
                         .deleteCookies("JSESSIONID")
-                        
+
                 ).csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/**","/css/**", "/js/**", "/img/**").permitAll()
                         .anyRequest().authenticated()
