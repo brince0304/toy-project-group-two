@@ -28,7 +28,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3>게시판</h3>
+                    <h3 th:text="${boardType}"></h3>
                 </div>
                 <div class="card-body" id="board-list">
                     <table class="table table-hover">
@@ -41,38 +41,61 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="board : ${boards}">
-                            <td >1</td>
-                            <td >테스트제목</td>
-                            <td >백석현</td>
-                            <td >01-31</td>
+                        <tr th:each="board : ${boardList}" th:data-id="${board.id}" class="board-list" style="cursor:pointer">
+                            <td th:text="${board.id}"></td>
+                            <td th:text="${board.title}">테스트제목</td>
+                            <td th:text="${board.userNickname}">백석현</td>
+                            <td th:text="${board.createdAt}">01-31</td>
                         </tr>
                         </tbody>
                     </table>
+                    <div>
+                        <a th:href="@{'/board/post?type='+${boardType}}" class="btn btn-primary" th:if="${boardType!='NOTICE' && !boardType.contains('FAQ')}" style="float:right">글쓰기</a>
+                    </div>
                   <!--페이징-->
-                  <nav aria-label="Page navigation example" class="board-nav">
-                    <ul class="pagination">
-                      <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                        </a>
-                      </li>
-                      <li class="page-item"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
+                    <br>
+                    <form id="search-form" >
+                        <!--게시글 검색-->
+                        <select name="searchType" id="searchType" >
+                            <option value="TITLE" th:selected="${searchType}=='TITLE'">제목</option>
+                            <option value="CONTENT" th:selected="${searchType}=='CONTENT'">내용</option>
+                            <option value="USER_NICKNAME" th:selected="${searchType}=='USER_NICKNAME'">닉네임</option>
+                            <option value="USER_ID" th:selected="${searchType}=='USER_ID'">아이디</option>
+                        </select>
+                        <input type="text" id="keyword" name="keyword" placeholder="검색어를 입력하세요" th:value="${keyword}">
+                        <button type="button" id="searchBtn" class="btn btn-primary">검색</button>
+                    </form>
+                    <nav class="pagination-outer" th:if="${!boardList.isEmpty()}"
+                         aria-label="Page navigation">
+                        <ul class="pagination" th:with="start=${(boardList.number/5)*5 + 1},
+                    last=(${start + 4 < boardList.totalPages ? start + 4 : boardList.totalPages})">
+                            <li class="page-item" th:class="${boardList.first} ? 'disabled'">
+                                <a th:href="${boardList.first} ? '#' :@{/board/(page=${0},searchType=${searchType},keyword=${keyword},type=${boardType})}"
+                                   class="page-link" aria-label="Previous">
+                                    <span aria-hidden="true">«</span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:each="page: ${#numbers.sequence(start , last)}"
+                                th:class="${page == boardList.number + 1} ? 'active'"><a
+                                    class="page-link" th:text="${page }"
+                                    th:href="@{/board/(page=${page -1},searchType=${searchType},keyword=${keyword},type=${boardType})}">1</a>
+                            </li>
+                            <li class="page-item"
+                                th:class="${boardList.totalPages == boardList.number +1 } ? 'disabled'">
+                                <a href="#" class="page-link" aria-label="Next"
+                                   th:href="@{/board/(page=${boardList.number +1},searchType=${searchType},keyword=${keyword},type=${boardType})}">
+                                    <span aria-hidden="true">»</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
     </div>
-
+<input type="hidden" id="board-type" th:value="${boardType}">
 </div>
+<script src="https://code.jquery.com/jquery-3.6.1.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
@@ -82,4 +105,19 @@
 </script>
 <script src="/js/header.js"></script>
 </body>
+<script>
+    $('.board-list').click(function () {
+        const id = $(this).attr('data-id');
+        location.href = '/board/' + id;
+    });
+
+    $('#searchBtn').click(function (e) {
+        e.preventDefault();
+        const searchType = $('#searchType').val();
+        const keyword = $('#keyword').val();
+        const boardType = $('#board-type').val();
+        location.href = '/board/?type=' + boardType + '&searchType=' + searchType + '&keyword=' + keyword;
+    });
+</script>
+
 </html>

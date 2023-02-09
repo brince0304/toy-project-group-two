@@ -31,13 +31,13 @@
               <a class="nav-link nav-content" href="/account/sign-up" sec:authorize="!isAuthenticated()">회원가입</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link nav-content" sec:authorize="isAuthenticated()" th:href="@{/board/(type=notice)}">공지사항</a>
+              <a class="nav-link nav-content" sec:authorize="isAuthenticated()" th:href="@{/board/(type=NOTICE)}">공지사항</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link nav-content" sec:authorize="isAuthenticated()" th:href="@{/board/(type=free)}">자유게시판</a>
+              <a class="nav-link nav-content" sec:authorize="isAuthenticated()" th:href="@{/board/(type=FREE)}">자유게시판</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link nav-content" sec:authorize="isAuthenticated()" th:href="@{/board/(type=faq)}">FAQ</a>
+              <a class="nav-link nav-content" sec:authorize="isAuthenticated()" th:href="@{/board/faq/FAQ_PAYMENT}">FAQ</a>
             </li>
           </ul>
         </div>

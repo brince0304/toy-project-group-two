@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+  <style>
+    body{
+      background:#f5f5f6;
+      margin-top:20px;
+    }
+    /*Faq*/
+
+    .faq-search-wrap {
+      padding: 50px 0 60px;
+    }
+
+    .faq-search-wrap .form-group .form-control,
+    .faq-search-wrap .form-group .dd-handle {
+      border-top-right-radius: .25rem;
+      border-bottom-right-radius: .25rem;
+    }
+
+    .faq-search-wrap .form-group .input-group-append {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .faq-search-wrap .form-group .input-group-append .input-group-text {
+      background: transparent;
+      border: none;
+    }
+
+    .faq-search-wrap .form-group .input-group-append .input-group-text .feather-icon > svg {
+      height: 18px;
+      width: 18px;
+    }
+    .bg-teal-light-3 {
+      background-color: #7fcdc1 !important;
+    }
+
+    .hk-row {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-right: -10px;
+      margin-left: -10px;
+    }
+
+    @media (min-width: 576px){
+      .mt-sm-60 {
+        margin-top: 60px !important;
+      }
+    }
+    .mt-30 {
+      margin-top: 30px !important;
+    }
+
+    .list-group-item.active {
+      background-color: #00acf0;
+      border-color: #00acf0;
+    }
+    .accordion .card .card-header.activestate {
+      border-width: 1px;
+    }
+    .accordion .card .card-header {
+      padding: 0;
+      border-width: 0;
+    }
+    .card.card-lg .card-header, .card.card-lg .card-footer {
+      padding: .9rem 1.5rem;
+    }
+    .accordion>.card .card-header {
+      margin-bottom: -1px;
+    }
+    .card .card-header {
+      background: transparent;
+      border: none;
+    }
+    .accordion.accordion-type-2 .card .card-header > a.collapsed {
+      color: #324148;
+    }
+    .accordion .card:first-of-type .card-header:first-child > a {
+      border-top-left-radius: calc(.25rem - 1px);
+      border-top-right-radius: calc(.25rem - 1px);
+    }
+    .accordion.accordion-type-2 .card .card-header > a {
+      background: transparent;
+      color: #00acf0;
+      padding-left: 50px;
+    }
+    .accordion .card .card-header > a.collapsed {
+      color: #324148;
+      background: transparent;
+    }
+    .accordion .card .card-header > a {
+      background: #00acf0;
+      color: #fff;
+      font-weight: 500;
+      padding: .75rem 1.25rem;
+      display: block;
+      width: 100%;
+      text-align: left;
+      position: relative;
+      -webkit-transition: all 0.2s ease-in-out;
+      -moz-transition: all 0.2s ease-in-out;
+      transition: all 0.2s ease-in-out;
+    }
+    a {
+      text-decoration: none;
+      color: #00acf0;
+      -webkit-transition: color 0.2s ease;
+      -moz-transition: color 0.2s ease;
+      transition: color 0.2s ease;
+    }
+
+
+    .badge.badge-pill {
+      border-radius: 50px;
+    }
+    .badge.badge-light {
+      background: #eaecec;
+      color: #324148;
+    }
+    .badge {
+      font-weight: 500;
+      border-radius: 4px;
+      padding: 5px 7px;
+      font-size: 72%;
+      letter-spacing: 0.3px;
+      vertical-align: middle;
+      display: inline-block;
+      text-align: center;
+      text-transform: capitalize;
+    }
+    .ml-15 {
+      margin-left: 15px !important;
+    }
+
+    .accordion.accordion-type-2 .card .card-header > a.collapsed:after {
+      content: "\f158";
+    }
+
+    .accordion.accordion-type-2 .card .card-header > a::after {
+      display: inline-block;
+      font: normal normal normal 14px/1 'Ionicons';
+      speak: none;
+      text-transform: none;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: auto;
+      position: absolute;
+      content: "\f176";
+      font-size: 21px;
+      top: 15px;
+      left: 20px;
+    }
+
+    .mr-15 {
+      margin-right: 15px !important;
+    }
+    .cursor {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<header th:replace="~{/header.html :: header}">
+  헤더
+</header>
+<div class="container-fluid" style="margin-top:15%">
+  <!-- Row -->
+  <div class="row">
+    <div class="col-xl-12 pa-0">
+      <div class="container mt-sm-60 mt-30">
+        <div class="hk-row">
+          <div class="col-xl-4">
+            <div class="card">
+              <h6 class="card-header">
+                목록
+              </h6>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex align-items-center cursor" th:classappend="${boardType} =='FAQ_PAYMENT'? 'active':''" data-id="FAQ_PAYMENT">
+                  <i class="ion ion-md-sunny mr-15"></i>결제/취소
+                </li>
+                <li class="list-group-item d-flex align-items-center cursor" th:classappend="${boardType} =='FAQ_USE'? 'active':''" data-id="FAQ_USE">
+                  <i class="ion ion-md-unlock mr-15"></i>이용문의
+                </li>
+                <li class="list-group-item d-flex align-items-center cursor" th:classappend="${boardType} =='FAQ_OTHER'? 'active':''" data-id="FAQ_OTHER">
+                  <i class="ion ion-md-bookmark mr-15"></i>기타
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xl-8">
+            <div class="card card-lg">
+              <h3 class="card-header border-bottom-0" th:text="${boardType}">
+              </h3>
+              <div class="accordion accordion-type-2 accordion-flush" id="accordion_2" th:data-id="${boardType}">
+                <div class="card" th:each="board:${boardList}">
+                  <div class="card-header d-flex justify-content-between activestate">
+                    <a role="button" data-bs-toggle="collapse" href="#collapse_1i" aria-expanded="true" th:text="${board.title}">The Intellectual Property</a>
+                  </div>
+                  <div id="collapse_1i" class="collapse show" data-parent="#accordion_2" role="tabpanel">
+                    <div class="card-body pa-15" th:text="${board.content}">The Intellectual Property disclosure will inform users that the contents, logo and other visual media you created is your property and is protected by copyright laws.</div>
+                    <a th:href="@{/board/post(type=${boardType},id=${board.id})}">
+                      <button type="button" class="btn btn-primary" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" >
+                        수정하기
+                      </button></a>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <a th:href="@{/board/post(type=${boardType})}">
+        <button type="button" class="btn btn-primary" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" >
+          FAQ작성하기
+        </button></a>
+      </div>
+    </div>
+  </div>
+  <!-- /Row -->
+</div>
+<script src="https://code.jquery.com/jquery-3.6.1.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+</script>
+<script src="/js/header.js"></script>
+</body>
+<script>
+    $(document).ready(function () {
+        $('.list-group-item').click(function () {
+        var boardType = $(this).data('id');
+        location.href = '/board/faq/' + boardType;
+        });
+    });
+</script>
+</html>

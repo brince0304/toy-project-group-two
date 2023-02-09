@@ -34,24 +34,31 @@
 <body>
 <header id="header" th:replace="~{/header.html :: header}">헤더</header>
 <div class="container" style="margin-top:10%">
-    <form>
+    <label for="board-form" style="font-size: 25px"  th:text="${boardType}">공지사항</label>
+    <br>
+    <form id="board-form">
     <div id="board-form-title">
         <label for="title" class="label">제목</label>
         <input type="text" class="form-control title-input" id="title" name="title" placeholder="제목을 입력해주세요">
+        <input type="text" class="form-control title-input" id="update-title" name="update-title" th:if="${boardResponse!=null}" th:value="${boardResponse.getTitle()}">
         <span class="text-danger board-form-warning" style="display: none" id="title-warning">2자 이상 50자 이하로 입력해주세요.</span>
     </div>
         <br>
         <div id="board-form-content">
             <label for="content" class="label">내용</label>
             <textarea class="form-control content-input" id="content" name="content" rows="10" placeholder="내용을 입력해주세요"></textarea>
+            <textarea  class="form-control content-input" id="update-content" name="update-title" th:if="${boardResponse!=null}" >[[${boardResponse.content}]]</textarea>
             <span class="text-danger board-form-warning" style="display: none" id="content-warning">10자 이상 500자 이하로 입력해주세요.</span>
         </div>
         <br>
+        <input hidden id="boardType" th:value="${boardType}">
         <div id="board-form-submit" class="btn-submit">
-        <button type="button" class="btn btn-outline-dark" onclick="uploadBoard()">등록</button>
-        <button type="button" class="btn btn-outline-dark btn-return">돌아가기</button>
+        <button type="button" class="btn btn-outline-dark" id="board-form-submit-btn"  onclick="uploadBoard()">등록</button>
+            <a th:href="@{'/board/?type='+${boardType}}">
+        <button type="button" class="btn btn-outline-dark btn-return" >돌아가기</button></a>
         </div>
     </form>
+    <input hidden id="boardId" th:value="${boardResponse.id}" th:if="${boardResponse!=null}">
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
@@ -65,12 +72,20 @@
 
 </body>
 <script>
+    $(document).ready(function () {
+        if ($("#boardId").val() != null) {
+            $("#content").remove();
+            $("#title").remove();
+            $("#board-form-submit-btn").text("수정");
+            $("#board-form-submit-btn").attr("onclick", "updateBoard()");
+        }
+    });
     var titleCheck = false;
     var contentCheck = false;
 
 
 
-    $('#content').keyup(function(){
+    $('.content-input').keyup(function(){
         if($(this).val().length < 10 || $(this).val().length > 500){
             $('#content-warning').show();
             contentCheck = false;
@@ -80,7 +95,7 @@
         }
     });
 
-    $('#title').keyup(function(){
+    $('.title-input').keyup(function(){
         if($(this).val().length < 2 || $(this).val().length > 50){
             $('#title-warning').show();
             titleCheck = false;
@@ -91,25 +106,57 @@
     });
 
     function uploadBoard(){
-        if(titleCheck && contentCheck){
+        const boardType = $('#boardType').val();
+        if(titleCheck && contentCheck || $("#boardId").val() != null){
             $.ajax({
                 url: '/board/post',
                 type: 'POST',
                 data: JSON.stringify({
                     title: $('#title').val(),
                     content: $('#content').val(),
-                    boardType: 'FREE'
+                    boardType: boardType
                 }),
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
                     alert('게시글이 등록되었습니다.');
+                    if(boardType.includes("FAQ")){
+                        location.href = "/board/faq/"+boardType;return;}
                     location.href = '/board/' + data;
                 },
                 error: function (data) {
-                    alert(data);
+                    alert(data.responseText);
                 }
             });
     }
+        else{
+            alert('입력값을 확인해주세요.');
+        }
+    }
+
+    function updateBoard(){
+        const boardType = $('#boardType').val();
+        const boardId = $('#boardId').val();
+        if(titleCheck && contentCheck || $("#boardId").val() != null){
+            $.ajax({
+                url: '/board/' + boardId,
+                type: 'PUT',
+                data: JSON.stringify({
+                    title: $('#update-title').val(),
+                    content: $('#update-content').val(),
+                    boardType: boardType
+                }),
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    alert('게시글이 수정되었습니다.');
+                    if(boardType.includes("FAQ")){
+                        location.href = "/board/faq/"+boardType; return;}
+                    location.href = '/board/' + data;
+                },
+                error: function (data) {
+                    alert(data.responseText);
+                }
+            });
+        }
         else{
             alert('입력값을 확인해주세요.');
         }

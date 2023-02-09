@@ -11,7 +11,9 @@
   헤더
 </header>
 <div class="container">
+
 <main id="board-main" style="margin-top:15%">
+  <h1 th:text="${boardResponse.boardType}"></h1>
   <article id="board">
     <div class="row">
       <div class="col-12" id="board-header">
@@ -22,7 +24,7 @@
           <input type="hidden" th:value="${boardResponse.id}" id="board-id">
         </div>
         <div style="display:inline; float:right" class="buttons">
-          <a sec:authorize="isAuthenticated()" th:if="${boardResponse.userId != null && #authentication.getName() == boardResponse.userId}">
+          <a sec:authorize="isAuthenticated()" th:if="${boardResponse.userId != null && #authentication.getName() == boardResponse.userId}" th:href="@{'/board/post?id='+${boardResponse.id}+'&type='+${boardResponse.boardType}}">
             <button type="button"  class="btn btn-light">수정</button>
           </a>
           <a
@@ -44,7 +46,7 @@
   <br>
   <section>
     <hr>
-    <a href="/board/">
+    <a th:href="@{'/board/?type='+${boardResponse.boardType}}">
       <button type="button" class="return btn btn-light" style="float:right">돌아가기</button>
     </a>
     <br>
@@ -79,6 +81,7 @@
 
 </main>
 </div>
+<input type="hidden" th:value="${boardResponse.boardType}" id="board-type">
 <script src="https://code.jquery.com/jquery-3.6.1.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
@@ -97,12 +100,13 @@
   function deleteBoard(){
     if(confirm("정말 삭제하시겠습니까?")){
       const boardId = $('#board-id').val();
+      const boardType= $('#board-type').val();
       $.ajax({
         type: 'DELETE',
         url: '/board/' + boardId,
         success: function (response) {
           alert('게시글이 삭제되었습니다.');
-          window.location.href = '/board/';
+          window.location.href = '/board/?type=' + boardType;
         },
         error: function (error) {
           alert(error.responseText);
@@ -137,7 +141,7 @@
     }
     function commentUpdateForm(id){
         const content = $('#comment-content-'+id).text();
-        const html = '<input type="text" id="comment-update-'+id+'" value="'+content+'">';
+        const html = '<textarea id="comment-update-'+id+'" >'+content+'</textarea>';
         $('#comment-content-'+id).html(html);
         $('#cancel-button-'+id).show();
         $('#update-button-'+id).text('수정하기');
