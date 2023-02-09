@@ -1,5 +1,6 @@
 package com.toyboardproject.Aspect;
 
+import com.toyboardproject.exception.NotAuthorizedException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,5 +22,6 @@ public class ControllerAdvice {
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
         return new ResponseEntity<>(e.getMessage(), org.springframework.http.HttpStatus.BAD_REQUEST);
     }
-
+    @ExceptionHandler(NotAuthorizedException.class)
+    public String handleNotAuthorizedException(NotAuthorizedException e) { return "redirect:/board/?type=FREE";}
 }
