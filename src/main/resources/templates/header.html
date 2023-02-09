@@ -17,7 +17,9 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="container">
-        <a class="navbar-brand navbar-title" href="#">게시판</a>
+        <a class="navbar-brand navbar-title" href="/account/login" sec:authorize="!isAuthenticated()">로그인을해주세요</a>
+        <a class="navbar-brand navbar-title" href="/board/?type=FREE"  sec:authorize="isAuthenticated()" >[[${#authentication.name}]]님 접속중</a>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
