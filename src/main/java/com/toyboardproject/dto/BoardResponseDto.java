@@ -1,6 +1,8 @@
 package com.toyboardproject.dto;
 
 import com.toyboardproject.domain.Board;
+import com.toyboardproject.domain.BoardType;
+import com.toyboardproject.utils.BoardUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +31,8 @@ public class BoardResponseDto {
     private String userId;
     
     private Integer commentCount;
+
+    private String boardType;
     
     public static BoardResponseDto from(Board entity){
         return BoardResponseDto.builder()
@@ -40,6 +44,7 @@ public class BoardResponseDto {
         .userNickname(entity.getAccount().getUserNickname())
         .userId(entity.getAccount().getUserId())
         .commentCount(entity.getBoardComments().size())
+                .boardType(BoardUtil.getBoardTypeName(entity.getBoardType()))
         .build();
     }
 }

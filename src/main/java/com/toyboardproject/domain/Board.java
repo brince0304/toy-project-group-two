@@ -34,14 +34,14 @@ public class Board extends AuditingFields  {
 
     private LocalDateTime deletedAt;
 
-    @ManyToOne (fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    @ManyToOne (fetch = FetchType.LAZY)
     private Account account;
 
     @Builder.Default
     @OneToMany (mappedBy="board", cascade = CascadeType.ALL)
     private Set<BoardComment> boardComments = new LinkedHashSet<>();
 
-    @Enumerated
+    @Enumerated (EnumType.STRING)
     @Setter
     private BoardType boardType;
 
