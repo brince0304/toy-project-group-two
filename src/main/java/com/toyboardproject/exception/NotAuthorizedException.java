@@ -9,4 +9,6 @@ public class NotAuthorizedException extends IllegalAccessException{
     public NotAuthorizedException(String message){
         super(message);
     }
+
 }
+

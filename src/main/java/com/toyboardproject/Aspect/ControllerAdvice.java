@@ -27,4 +27,5 @@ public class ControllerAdvice {
     public String handleNotAuthorizedException(NotAuthorizedException e) { return "redirect:/board/?type=FREE";}
 
 
+
 }

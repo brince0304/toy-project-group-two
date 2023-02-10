@@ -59,10 +59,10 @@ public class BoardCommentController {
     @BoardCommentAuthorCheck
     @PutMapping("/comment")
     public ResponseEntity<Boolean> updateComment(@AuthenticationPrincipal PrincipalDto principal,
-                                                  @Valid @RequestBody BoardCommentRequestDto boardCommentRequestDto,
+                                                  @Valid @RequestBody BoardCommentRequestDto dto,
                                                   BindingResult bindingResult){
         log.info("댓글 수정 기능 수행");
-        boardCommentService.updateBoardComment(boardCommentRequestDto);
+        boardCommentService.updateBoardComment(dto);
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 

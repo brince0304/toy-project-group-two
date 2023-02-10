@@ -18,10 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @Import(SecurityConfig.class)
@@ -186,6 +183,35 @@ class BoardCommentControllerTest {
                         .param("commentId", String.valueOf(20))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @WithUserDetails("test2")
+    @DisplayName("[Controller] 댓글 수정 실패 테스트 : 본인이 작성하지 않은 댓글 수정 시")
+    @Test
+    public void updateCommentFail3() throws Exception {
+        BoardCommentRequestDto request = BoardCommentRequestDto.builder()
+                .commentContent("Owner5.......?")
+                .boardId(1L)
+                .id(1L)
+                .build();
+
+        mockMvc.perform(put("/comment")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/board/?type=FREE"))
+                .andDo(print());
+    }
+
+    @WithUserDetails("test2")
+    @DisplayName("[Controller] 댓글 삭제 실패 테스트 : 본인이 작성하지 않은 댓글 삭제 시")
+    @Test
+    public void deleteCommentFail2() throws Exception{
+        mockMvc.perform(delete("/comment/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/board/?type=FREE"))
                 .andDo(print());
     }
 }
