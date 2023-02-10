@@ -12,23 +12,17 @@ import com.toyboardproject.service.BoardService;
 import com.toyboardproject.utils.BoardUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.net.URI;
 
 
 @RequestMapping("/board")
@@ -49,7 +43,7 @@ public class BoardController {
     // 게시글 생성 및 수정 페이지 요청
     @GetMapping("/post")
     @AuthCheck
-    public ModelAndView getBoardInsertForm(@RequestParam BoardType type,@RequestParam(required = false) Long id,@AuthenticationPrincipal PrincipalDto principal) {
+    public ModelAndView getBoardInsertForm(@AuthenticationPrincipal PrincipalDto principal, @RequestParam BoardType type,@RequestParam(required = false) Long id) {
         if(type!=BoardType.FREE){
             if(!principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))){
                 return new ModelAndView("redirect:/board/?type="+type);
@@ -121,7 +115,7 @@ public class BoardController {
     @AuthCheck
     @BoardAuthorCheck
     @PutMapping("/{id}")
-    public ResponseEntity<Long> updateBoardById(@PathVariable Long id, @Valid @RequestBody BoardRequestDto dto, @AuthenticationPrincipal PrincipalDto principal, BindingResult bindingResult){
+    public ResponseEntity<Long> updateBoardById(@AuthenticationPrincipal PrincipalDto principal, @PathVariable Long id, @Valid @RequestBody BoardRequestDto dto, BindingResult bindingResult){
         return new ResponseEntity<>(boardService.updateBoardById(id, dto), HttpStatus.OK);
     }
 
@@ -129,7 +123,7 @@ public class BoardController {
     @AuthCheck
     @BoardAuthorCheck
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteBoardById(@PathVariable Long id, @AuthenticationPrincipal PrincipalDto principal){
+    public ResponseEntity<Boolean> deleteBoardById(@AuthenticationPrincipal PrincipalDto principal, @PathVariable Long id){
         boardService.deleteBoardById(id);
         return new ResponseEntity<>( HttpStatus.OK);
     }

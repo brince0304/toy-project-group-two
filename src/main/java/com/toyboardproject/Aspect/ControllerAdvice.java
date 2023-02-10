@@ -22,6 +22,10 @@ public class ControllerAdvice {
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
         return new ResponseEntity<>(e.getMessage(), org.springframework.http.HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(NotAuthorizedException.class)
     public String handleNotAuthorizedException(NotAuthorizedException e) { return "redirect:/board/?type=FREE";}
+
+
+
 }

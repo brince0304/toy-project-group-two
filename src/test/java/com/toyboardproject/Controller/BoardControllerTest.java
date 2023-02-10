@@ -2,8 +2,10 @@ package com.toyboardproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toyboardproject.config.SecurityConfig;
+import com.toyboardproject.controller.BoardController;
 import com.toyboardproject.domain.BoardType;
 import com.toyboardproject.dto.BoardRequestDto;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +15,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Import(SecurityConfig.class)
 @AutoConfigureMockMvc
@@ -159,6 +163,24 @@ class BoardControllerTest {
                 .andDo(print());
 
     }
+
+    @WithUserDetails("test2")
+    @DisplayName("[Controller] 게시글 수정 실패 테스트 - 본인이 작성하지 않은 글 수정 시도")
+    @Test
+    public void updateBoardByIdError2() throws Exception {
+        BoardRequestDto requestDto = BoardRequestDto.builder()
+                .title("제목수정")
+                .content("내용도 수정하는데 되니?")
+                .boardType(BoardType.NOTICE)
+                .build();
+
+        mockMvc.perform(put("/board/9")
+                        .content(objectMapper.writeValueAsString(requestDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/board/?type=FREE"))
+                .andDo(print());
+    }
 //////////////////////
     @WithUserDetails("test")
     @DisplayName("[Controller] 게시글 삭제 성공 테스트")
@@ -182,6 +204,20 @@ class BoardControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
                 .andDo(print());
     }
+
+    @WithUserDetails("test2")
+    @DisplayName("[Controller] 게시글 삭제 실패 테스트 - 본인이 작성하지 않은 글 삭제 시도")
+    @Test
+    public void deleteBoardByIdError2() throws Exception {
+
+        mockMvc.perform(delete("/board/9")
+                        .content("{ \"boardId\" : 9}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/board/?type=FREE"))
+                .andDo(print());
+    }
+
 
 }
 

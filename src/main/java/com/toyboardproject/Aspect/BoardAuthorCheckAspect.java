@@ -1,8 +1,10 @@
 package com.toyboardproject.Aspect;
 
 import com.toyboardproject.dto.PrincipalDto;
+import com.toyboardproject.exception.NotAuthorizedException;
 import com.toyboardproject.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -18,12 +20,16 @@ public class BoardAuthorCheckAspect {
     public void boardAuthorCheck() {
     }
 
-    @Before(value = "boardAuthorCheck()&&args(principal,id,..)", argNames = "principal,id")
-    public void beforeBoardAuthorCheck(PrincipalDto principal,Long id ) throws IllegalAccessException {
-        if (!boardService.isBoardOwner(id, principal)) {
-            throw new IllegalAccessException("권한이 없습니다.");
+    @Before("boardAuthorCheck()")
+    public void beforeBoardAuthorCheck(JoinPoint jp) throws IllegalAccessException {
+        Object[] args = jp.getArgs();
+        for (Object arg : args) {
+            if(arg instanceof Long id){
+                if(!boardService.isBoardOwner(id,(PrincipalDto)args[0])){
+                    throw new NotAuthorizedException("권한이 없습니다.");
+                }
+            }
         }
     }
-
 
 }
