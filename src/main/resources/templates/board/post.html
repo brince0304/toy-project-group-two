@@ -53,7 +53,8 @@
         <br>
         <input hidden id="boardType" th:value="${boardType}">
         <div id="board-form-submit" class="btn-submit">
-        <button type="button" class="btn btn-outline-dark" id="board-form-submit-btn"  onclick="uploadBoard()">등록</button>
+        <button type="button" class="btn btn-outline-dark board-form-submit-btn"  onclick="uploadBoard()" th:if="${boardType.value=='FREE'}">등록</button>
+            <button type="button" class="btn btn-outline-dark board-form-submit-btn"  onclick="uploadBoardAdmin()" th:if="${boardType.value=='NOTICE' || boardType.value.contains('FAQ')}">등록</button>
             <a th:href="@{'/board/?type='+${boardType}}">
         <button type="button" class="btn btn-outline-dark btn-return" >돌아가기</button></a>
         </div>
@@ -76,14 +77,40 @@
         if ($("#boardId").val() != null) {
             $("#content").remove();
             $("#title").remove();
-            $("#board-form-submit-btn").text("수정");
-            $("#board-form-submit-btn").attr("onclick", "updateBoard()");
+            $(".board-form-submit-btn").text("수정");
+            $(".board-form-submit-btn").attr("onclick", "updateBoard()");
         }
     });
     var titleCheck = false;
     var contentCheck = false;
 
-
+    function uploadBoardAdmin(){
+            const boardType = $('#boardType').val();
+            if(titleCheck && contentCheck || $("#boardId").val() != null){
+                $.ajax({
+                    url: '/board/admin/post',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        title: $('#title').val(),
+                        content: $('#content').val(),
+                        boardType: boardType
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        alert('게시글이 등록되었습니다.');
+                        if(boardType.includes("FAQ")){
+                            location.href = "/board/faq/"+boardType;return;}
+                        location.href = '/board/' + data;
+                    },
+                    error: function (data) {
+                        alert(data.responseText);
+                    }
+                });
+            }
+            else{
+                alert('입력값을 확인해주세요.');
+            }
+    }
 
     $('.content-input').keyup(function(){
         if($(this).val().length < 10 || $(this).val().length > 500){
@@ -161,6 +188,8 @@
             alert('입력값을 확인해주세요.');
         }
     }
+
+
 
 
 </script>

@@ -30,10 +30,14 @@ public class BoardService {
         if(dto.getBoardType()==null){
             throw new IllegalArgumentException("게시판 타입을 선택해주세요.");
             //spring security check role
-        }if(dto.getBoardType()==BoardType.NOTICE &&  !principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))){
+        }if(dto.getBoardType()==BoardType.NOTICE){
             throw new IllegalArgumentException("공지사항은 관리자만 작성할 수 있습니다.");
-        }if(dto.getBoardType().getValue().contains("FAQ") && !principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))){
+        }if(dto.getBoardType().getValue().contains("FAQ")){
             throw new IllegalArgumentException("FAQ는 관리자만 작성할 수 있습니다.");}
+        return boardRepository.save(dto.toEntity(principal)).getId();
+    }
+
+    public Long createBoardAdmin(BoardRequestDto dto, PrincipalDto principal){
         return boardRepository.save(dto.toEntity(principal)).getId();
     }
 

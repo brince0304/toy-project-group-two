@@ -27,6 +27,9 @@
           <a sec:authorize="isAuthenticated()" th:if="${boardResponse.userId != null && #authentication.getName() == boardResponse.userId}" th:href="@{'/board/post?id='+${boardResponse.id}+'&type='+${boardResponse.boardType}}">
             <button type="button"  class="btn btn-light">수정</button>
           </a>
+          <a sec:authorize="isAuthenticated()" th:if="${#authorization.expression('hasRole(''ADMIN'')') && #authentication.getName() == boardResponse.userId && boardResponse.boardType=='NOTICE'}" th:href="@{'/board/admin/post?id='+${boardResponse.id}+'&type='+${boardResponse.boardType}}">
+            <button type="button"  class="btn btn-light">수정</button>
+          </a>
           <a
                   sec:authorize="isAuthenticated()"
                   th:if="${boardResponse.userId != null&& #authentication.getName() == boardResponse.userId}"

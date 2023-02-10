@@ -51,7 +51,7 @@
                     </table>
                     <div>
                         <a th:href="@{'/board/post?type='+${boardType}}" class="btn btn-primary" th:if="${boardType!='NOTICE' && !boardType.contains('FAQ')}" style="float:right">글쓰기</a>
-                        <a th:href="@{'/board/post?type='+${boardType}}" class="btn btn-primary" th:if="${boardType=='NOTICE' && #authorization.expression('hasRole(''ADMIN'')')}" style="float:right">글쓰기</a>
+                        <a th:href="@{'/board/admin/post?type='+${boardType}}" class="btn btn-primary" th:if="${boardType=='NOTICE' && #authorization.expression('hasRole(''ADMIN'')')}" style="float:right">글쓰기</a>
 
                     </div>
                   <!--페이징-->
@@ -119,6 +119,12 @@
         const keyword = $('#keyword').val();
         const boardType = $('#board-type').val();
         location.href = '/board/?type=' + boardType + '&searchType=' + searchType + '&keyword=' + keyword;
+    });
+    $('#search-form').keypress(function (e) {
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            $('#searchBtn').click();
+        }
     });
 </script>
 

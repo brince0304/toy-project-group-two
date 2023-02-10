@@ -204,12 +204,12 @@
               </h3>
               <div class="accordion accordion-type-2 accordion-flush" id="accordion_2" th:data-id="${boardType}">
                 <div class="card" th:each="board:${boardList}">
-                  <div class="card-header d-flex justify-content-between activestate">
-                    <a role="button" data-bs-toggle="collapse" href="#collapse_1i" aria-expanded="true" th:text="${board.title}">The Intellectual Property</a>
+                  <div class="card-header d-flex justify-content-between">
+                    <a role="button" data-bs-toggle="collapse" th:href="@{'#collapse-'+${board.id}}" aria-expanded="false" th:text="${board.title}" class="collapsed">The Intellectual Property</a>
                   </div>
-                  <div id="collapse_1i" class="collapse show" data-parent="#accordion_2" role="tabpanel">
+                  <div th:id="${'collapse-'+board.id}" class="collapse" data-parent="#accordion_2" role="tabpanel">
                     <div class="card-body pa-15" th:text="${board.content}">The Intellectual Property disclosure will inform users that the contents, logo and other visual media you created is your property and is protected by copyright laws.</div>
-                    <a th:href="@{/board/post(type=${boardType},id=${board.id})}">
+                    <a th:href="@{/board/admin/post(type=${boardType},id=${board.id})}">
                       <button type="button" class="btn btn-primary" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" >
                         수정하기
                       </button></a>
@@ -221,7 +221,7 @@
             </div>
           </div>
         </div>
-        <a th:href="@{/board/post(type=${boardType})}">
+        <a th:href="@{/board/admin/post(type=${boardType})}">
         <button type="button" class="btn btn-primary" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" >
           FAQ작성하기
         </button></a>

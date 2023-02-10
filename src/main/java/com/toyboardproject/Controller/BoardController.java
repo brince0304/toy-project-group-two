@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.validation.BindingResult;
@@ -40,21 +41,25 @@ public class BoardController {
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
+    @AuthCheck
+    @PostMapping("/admin/post")
+    @BindingCheck
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Long> createBoardAdmin(@AuthenticationPrincipal PrincipalDto principal, @Valid @RequestBody BoardRequestDto dto, BindingResult bindingResult){
+        Long id = boardService.createBoardAdmin(dto,principal);
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
+
+
     // 게시글 생성 및 수정 페이지 요청
     @GetMapping("/post")
     @AuthCheck
     public ModelAndView getBoardInsertForm(@AuthenticationPrincipal PrincipalDto principal, @RequestParam BoardType type,@RequestParam(required = false) Long id) {
-        if(type!=BoardType.FREE){
-            if(!principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))){
-                return new ModelAndView("redirect:/board/?type="+type);
-            }
-            if(!principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))){
-                if(type.getValue().contains("FAQ")){
-                    return new ModelAndView("redirect:/board/faq/"+type);
-                }
-            }
-        }
         ModelAndView mav = new ModelAndView();
+        if(type==BoardType.NOTICE || type.getValue().contains("FAQ")){
+                mav.setViewName("redirect:/board/?type="+type.getValue());
+                return mav;
+        }
         mav.setViewName("board/post");
         mav.addObject("boardType", type);
         if(id==null) {
@@ -64,20 +69,34 @@ public class BoardController {
             return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/admin/post")
+    public ModelAndView getBoardInsertFormAdmin(@AuthenticationPrincipal PrincipalDto principal, @RequestParam BoardType type,@RequestParam(required = false) Long id) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("board/post");
+        mav.addObject("boardType", type);
+        if(id==null) {
+            return mav;
+        }
+        mav.addObject("boardResponse", boardService.findBoardById(id));
+        return mav;
+    }
+
     //게시글 상세 페이지
     @AuthCheck
     @GetMapping("/{id}")
-    public ModelAndView findBoardById(@PathVariable Long id) {
+    public ModelAndView findBoardById(@AuthenticationPrincipal PrincipalDto principal,@PathVariable Long id) {
         ModelAndView mav = new ModelAndView("board/detail");
         mav.addObject("boardResponse",boardService.findBoardById(id));
-        //mav.setViewName("상세뷰")
         return mav;
     }
+
+
 
     //게시글 리스트 페이지
     @AuthCheck
     @GetMapping("/")
-    public ModelAndView boardList(@RequestParam BoardType type, @RequestParam(required = false) SearchType searchType
+    public ModelAndView boardList(@AuthenticationPrincipal PrincipalDto principal,@RequestParam BoardType type, @RequestParam(required = false) SearchType searchType
             , @RequestParam(required = false) String keyword
             ,@PageableDefault(sort="createdAt",direction = Sort.Direction.DESC) Pageable pageable) {
         if(type.getValue().contains("FAQ")){
@@ -100,7 +119,7 @@ public class BoardController {
     }
     @AuthCheck
     @GetMapping("/faq/{type}")
-    public ModelAndView faqList(@PathVariable BoardType type
+    public ModelAndView faqList(@AuthenticationPrincipal PrincipalDto principal,@PathVariable BoardType type
             ,@PageableDefault(sort="createdAt",direction = Sort.Direction.DESC) Pageable pageable) {
         Page<BoardResponseDto> response = boardService.searchBoardByKeywordAndSearchTypeAndBoardType(pageable,type,null,"");
         ModelAndView mav = new ModelAndView();
