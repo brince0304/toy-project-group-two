@@ -3,11 +3,15 @@ package com.toyboardproject.dto;
 import com.toyboardproject.domain.Account;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountRequestDto {
 
     private String userId;
