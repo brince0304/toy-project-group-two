@@ -34,10 +34,7 @@ public class BoardCommentController {
     public ResponseEntity<Boolean> createComment(@AuthenticationPrincipal PrincipalDto principal,
                                                  @Valid @RequestBody BoardCommentRequestDto commentRequest,
                                                  BindingResult bindingResult){
-        log.info("댓글 저장 기능 수행");
-
         boolean result = boardCommentService.createBoardComment(commentRequest, principal);
-
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -61,7 +58,6 @@ public class BoardCommentController {
     public ResponseEntity<Boolean> updateComment(@AuthenticationPrincipal PrincipalDto principal,
                                                   @Valid @RequestBody BoardCommentRequestDto dto,
                                                   BindingResult bindingResult){
-        log.info("댓글 수정 기능 수행");
         boardCommentService.updateBoardComment(dto);
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
@@ -74,10 +70,7 @@ public class BoardCommentController {
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<Boolean> deleteComment(@AuthenticationPrincipal PrincipalDto principal,
                                                  @PathVariable Long commentId){
-        log.info("댓글 삭제 기능 수행");
-
         boardCommentService.deleteBoardCommentByCommentId(commentId);
-
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }

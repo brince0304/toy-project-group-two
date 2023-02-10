@@ -5,6 +5,7 @@ import com.toyboardproject.config.SecurityConfig;
 import com.toyboardproject.controller.BoardController;
 import com.toyboardproject.domain.BoardType;
 import com.toyboardproject.dto.BoardRequestDto;
+import lombok.With;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,7 @@ class BoardControllerTest {
                 .boardType(BoardType.NOTICE)
                 .build();
 
-        mockMvc.perform(post("/board/post")
+        mockMvc.perform(post("/board/admin/post")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -79,7 +80,7 @@ class BoardControllerTest {
                 .boardType(BoardType.FAQ_USE)
                 .build();
 
-        mockMvc.perform(post("/board/post")
+        mockMvc.perform(post("/board/admin/post")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -105,6 +106,41 @@ class BoardControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
                 .andDo(print());
 
+    }
+
+    @DisplayName("[Controller] 게시글 생성 실패 테스트 - 공지사항이나 FAQ를 업로드 할때")
+    @WithUserDetails("test2")
+    @Test
+    public void createBoardError() throws Exception {
+        BoardRequestDto request = BoardRequestDto.builder()
+                .title("제목입니다")
+                .content("내용은 10자이상 적어주세요")
+                .boardType(BoardType.NOTICE)
+                .build();
+
+        mockMvc.perform(post("/board/post")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
+                .andDo(print());
+    }
+
+    @DisplayName("[Controller] 게시글 생성 성공 테스트 - 공지사항이나 FAQ를 업로드 할때")
+    @WithUserDetails("test")
+    @Test
+    public void createBoardAdmin() throws Exception {
+        BoardRequestDto request = BoardRequestDto.builder()
+                .title("제목입니다")
+                .content("내용은 10자이상 적어주세요")
+                .boardType(BoardType.NOTICE)
+                .build();
+
+        mockMvc.perform(post("/board/admin/post")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @DisplayName("[Controller] 게시글 생성 실패 테스트 - 글자수에러")
@@ -174,7 +210,7 @@ class BoardControllerTest {
                 .boardType(BoardType.NOTICE)
                 .build();
 
-        mockMvc.perform(put("/board/9")
+        mockMvc.perform(put("/board/1")
                         .content(objectMapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is3xxRedirection())
@@ -210,13 +246,81 @@ class BoardControllerTest {
     @Test
     public void deleteBoardByIdError2() throws Exception {
 
-        mockMvc.perform(delete("/board/9")
-                        .content("{ \"boardId\" : 9}")
+        mockMvc.perform(delete("/board/1")
+                        .content("{ \"boardId\" : 1}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/board/?type=FREE"))
                 .andDo(print());
     }
+
+    @DisplayName("[Controller] 게시글 조회 성공")
+    @Test
+    @WithUserDetails("test")
+    public void getBoardById() throws Exception {
+        mockMvc.perform(get("/board/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andDo(print());
+    }
+
+    @DisplayName("[Controller] 게시글 조회 실패 - 로그인이 되어있지 않을떄")
+    @Test
+    public void getBoardByIdErr() throws Exception {
+        mockMvc.perform(get("/board/1"))
+                .andExpect(status().is3xxRedirection())
+                .andDo(print());
+    }
+
+    @DisplayName("[Controller] 게시글 작성 뷰 ")
+    @Test
+    @WithUserDetails("test")
+    public void getBoardInsertForm() throws Exception {
+        mockMvc.perform(get("/board/post?type=FREE"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("boardType"))
+                .andDo(print());
+    }
+
+    @DisplayName("[Controller] 게시글 작성 뷰 - 관리자 작성 폼  ")
+    @Test
+    @WithUserDetails("test")
+    public void getBoardInsertFormAdmin() throws Exception {
+        mockMvc.perform(get("/board/admin/post?type=FREE"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("boardType"))
+                .andDo(print());
+    }
+
+    @DisplayName("[Controller] 게시글 작성 뷰 - 수정할 게시글일때 ")
+    @Test
+    @WithUserDetails("test")
+    public void getBoardInsertFormPut() throws Exception {
+        mockMvc.perform(get("/board/post?type=FREE&id=1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("boardType"))
+                .andExpect(model().attributeExists("boardResponse"))
+                .andDo(print());
+    }
+
+    @DisplayName("[Controller] 게시글 작성 뷰 - 수정할 게시글일때 - 로그인이 되어있지 않을때")
+    @Test
+    public void getBoardInsertFormPutErr() throws Exception {
+        mockMvc.perform(get("/board/post?type=FREE&id=1"))
+                .andExpect(status().is3xxRedirection())
+                .andDo(print());
+    }
+
+    @DisplayName("[Controller] 게시글 작성 뷰 일반 사용자이지만 공지사항이나 faq 작성 폼 진입 시도")
+    @Test
+    @WithUserDetails("test2")
+    public void getBoardInsertFormErr() throws Exception {
+        mockMvc.perform(get("/board/admin/post?type=NOTICE"))
+                .andExpect(status().is4xxClientError())
+                .andDo(print());
+    }
+
+
 
 
 }
